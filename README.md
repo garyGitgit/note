@@ -1,61 +1,4 @@
 ```
-#define NAME_MAXLEN 6
-#define PATH_MAXLEN 1999
-
-// The below commented functions are for your reference. If you want 
-// to use it, uncomment these functions.
-/*
-int mstrcmp(const char *a, const char *b)
-{
-int i;
-for (i = 0; a[i] != '\0'; i++)
-{
-if (a[i] != b[i])
-return a[i] - b[i];
-}
-return a[i] - b[i];
-}
-
-int mstrncmp(const char *a, const char *b, int len)
-{
-for (int i = 0; i < len; i++)
-{
-if (a[i] != b[i])
-return a[i] - b[i];
-}
-return 0;
-}
-
-int mstrlen(const char *a)
-{
-int len = 0;
-
-while (a[len] != '\0')
-len++;
-
-return len;
-}
-
-void mstrcpy(char *dest, const char *src)
-{
-int i = 0;
-while (src[i] != '\0')
-{
-dest[i] = src[i];
-i++;
-}
-dest[i] = src[i];
-}
-
-void mstrncpy(char *dest, const char *src, int len)
-{
-for (int i = 0; i<len; i++)
-{
-dest[i] = src[i];
-}
-dest[len] = '\0';
-}
-*/
 
 // User defined 
 #define MAX_STR 6 + 1
@@ -64,6 +7,7 @@ dest[len] = '\0';
 
 typedef struct _tree{
 	int s2i;
+    int childCnt;
 	struct _tree *parent;
 	struct _tree *children[MAX_CHILDREN];
 }TREE;
@@ -105,12 +49,28 @@ TREE *createNode(char str[]){
 	TREE *newNode = _malloc();
 	newNode->s2i = strToInt(str);
 	newNode->parent = 0;
+    newNode->childCnt = 0;
 	initChildren(newNode->children);
 	return newNode;
 }
 
+TREE *createNodeInt(int s2i){
+	TREE *newNode = _malloc();
+	newNode->s2i = s2i;
+	newNode->parent = 0;
+	initChildren(newNode->children);
+	return newNode;
+}
+
+void updateChildCnt(TREE *node, int delta){
+    while (node){
+        node->childCnt += delta;
+        node = node->parent;
+    }
+}
+
 void insertNode(TREE *parent, TREE *newNode){
-	TREE **now = &parent->children[0];
+	TREE **now = &(parent->children[0]);
 	// find children pos
 	int cursor = 0;
 	while (*now){
@@ -119,17 +79,16 @@ void insertNode(TREE *parent, TREE *newNode){
 	}
 	newNode->parent = parent;
 	parent->children[cursor] = newNode;
+    ++parent->childCnt;
+    updateChildCnt(parent, 1);
 }
 
-void init(){
-	mPool.cursor = 0;
-}
-
-
-TREE *searchChildNodeByPath(TREE *parent, char path []){
+TREE *getNearestNodeByPath(TREE *parent, char path [], int *offset){
 	char name[MAX_STR];
 	//start from the next to first slash
-	++path;
+    if (offset){
+        path = path + *offset + 1;
+    }
 	register int i = 0;
 
 	//get name
@@ -139,22 +98,36 @@ TREE *searchChildNodeByPath(TREE *parent, char path []){
 		++path;
 	}
 	name[i] = 0;
+    if (offset){
+        *offset = *offset + i + 1;
+    }
 
 	int pathInt = strToInt(name);
 
-	for (i = 0; i < MAX_CHILDREN && parent->children[i] != 0; ++i){
-		if (parent->children[i]->s2i == pathInt){
-			return parent->children[i];
-		}
+	for (i = 0; i < MAX_CHILDREN ; ++i){
+        if (parent->children[i] != 0){
+		    if (parent->children[i]->s2i == pathInt){
+			    return parent->children[i];
+		    }
+        }
 	}
 	return 0;
 }
 
+TREE *getNodeByPath (char path[]){
+    TREE *node = root;
+    TREE *prev = 0;
+    int offset = 0;
+
+	while (node){
+		prev = node;
+		node = getNearestNodeByPath(node, path, &offset);
+	}
+}
 
 TREE *root;
 int N;
-//To implment
-
+//To implement
 void init(int n) {
 	N = n;
 	mPool.cursor = 0;
@@ -162,22 +135,50 @@ void init(int n) {
 }
 
 void cmd_mkdir(char path[PATH_MAXLEN + 1], char name[NAME_MAXLEN + 1]) {
-
+    TREE *newNode = createNode(name);
+    TREE *parent = getNearestNodeByPath(root, path, 0);
+    insertNode(parent, newNode);
 }
 
 void cmd_rm(char path[PATH_MAXLEN + 1]) {
-
+    TREE *node = getNearestNodeByPath(root, path, 0);
+    TREE *parent = node->parent;
+    for (register int i  = 0; i < MAX_CHILDREN ; ++i){
+        if (parent->children[i] != 0){
+            if (node->s2i == parent->children[i]->s2i){
+                parent->children[i] = 0;
+                int delChildCnt = parent->children[i]->childCnt + 1;
+                updateChildCnt (parent, (-1)*delChildCnt);
+                break;
+            }
+        }
+    }
 }
 
-void cmd_cp(char srcPath[PATH_MAXLEN + 1], char dstPath[PATH_MAXLEN + 1]) {
+void copy(TREE *srcNode, TREE *destNode){
+	if (!srcNode) { return ; }
 
+	for (int i = 0; srcNode->children[i] != 0; ++i){
+        destNode = createNodeInt(srcNode->s2i);
+		copy(srcNode->children[i], destNode->children[i]);
+	}
+}
+void cmd_cp(char srcPath[PATH_MAXLEN + 1], char dstPath[PATH_MAXLEN + 1]) {
+    TREE *srcNode = getNearestNodeByPath(root, srcPath, 0);
+    TREE *destNode = getNearestNodeByPath(root, dstPath, 0);
+
+    destNode->childCnt += srcNode->childCnt;
+    copy(srcNode, destNode);
 }
 
 void cmd_mv(char srcPath[PATH_MAXLEN + 1], char dstPath[PATH_MAXLEN + 1]) {
+    //cmd_cp(srcPath, dstPath);
+    TREE *srcNode = getNearestNodeByPath(root, srcPath, 0);
+    TREE *destNode = getNearestNodeByPath(root, dstPath, 0);
 
+    insertNode(destNode, srcNode);
+    cmd_rm(srcPath);
 }
-
-
 
 int getSubdirCount(TREE *node){
 	if (!node) { return 0; }
@@ -191,19 +192,9 @@ int getSubdirCount(TREE *node){
 }
 
 int cmd_find(char path[PATH_MAXLEN + 1]) {
-	TREE * prev = 0;
-	TREE *node = root;
-	// find node position
-	while (node){
-		prev = node;
-		node = searchChildNodeByPath(node, path);
-	}
+    node = getNodeByPath(path);
 
-	// found
-	if (path == 0 && prev != 0){
-		return getSubdirCount(prev);
-	}
-	return 0;
+	return node->cnt;
 }
 
 int main(){
