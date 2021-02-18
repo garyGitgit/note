@@ -1,5 +1,4 @@
 ```
-
 #define NAME_MAXLEN 6
 #define PATH_MAXLEN 1999
 
