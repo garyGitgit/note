@@ -1,205 +1,285 @@
 ```
+#define MAX_N    100
+#define MAX_TOOL 50
+#define MAX_STEP 10
+#define MAX_MEMORY 100000
+#define MAX_Q 100000
+int MY_N;
 
-#define PATH_MAXLEN 6 + 1
-#define NAME_MAXLEN 30
+typedef struct _heap {
+	int heapSize = 0;
+	int empties[MAX_TOOL + 1];
+	int total = 0; // init once in setupTools
 
-// User defined 
-#define MAX_STR 6 + 1
-#define MAX_CHILDREN 30
-#define MAX_MEMORY 50010
+	int push(int value)
+	{
+		if (heapSize + 1 > MAX_TOOL + 1)
+		{
+			return 0;
+		}
 
-typedef struct _tree {
-   int s2i;
-   int childCnt;
-   struct _tree *parent;
-   struct _tree *children[MAX_CHILDREN];
-}TREE;
+		empties[heapSize] = value;
+
+		int current = heapSize;
+		while (current > 0 && empties[current] < empties[(current - 1) / 2])
+		{
+			int temp = empties[(current - 1) / 2];
+			empties[(current - 1) / 2] = empties[current];
+			empties[current] = temp;
+			current = (current - 1) / 2;
+		}
+
+		heapSize = heapSize + 1;
+
+		return 1;
+	}
 
 
-TREE *root;
-int N;
+	int getRunningCnt() {
+		return total - heapSize;
+	}
+
+	
+	int pop(int* value)
+	{
+		if (heapSize <= 0)
+		{
+			return -1;
+		}
+
+		*value = empties[0];
+		heapSize = heapSize - 1;
+
+		empties[0] = empties[heapSize];
+
+		int current = 0;
+		while (current * 2 + 1 < heapSize)
+		{
+			int child;
+			if (current * 2 + 2 == heapSize)
+			{
+				child = current * 2 + 1;
+			}
+			else
+			{
+				child = empties[current * 2 + 1] < empties[current * 2 + 2] ? current * 2 + 1 : current * 2 + 2;
+			}
+
+			if (empties[current] < empties[child])
+			{
+				break;
+			}
+
+			int temp = empties[current];
+			empties[current] = empties[child];
+			empties[child] = temp;
+
+			current = child;
+		}
+		return 1;
+	}
+
+} HEAP;
+
+HEAP tools[MAX_STEP + 1]; // empty tools as a heap
+int waitQ[MAX_STEP + 1]; // waiting count for each step
+
+typedef struct _job {
+	int stepId;
+	int toolPt;
+	int finshedTime;
+} JOB;
 
 typedef struct _memoryPool {
-   TREE pool[MAX_MEMORY];
-   int cursor;
-}  MEMORY_POOL;
+	JOB jobs[MAX_MEMORY];
+	int cursor = 0;
+
+	JOB* get(int _stepId, int _toolPt, int _finishedTime) {
+		jobs[cursor].stepId = _stepId;
+		jobs[cursor].toolPt = _toolPt;
+		jobs[cursor].finshedTime = _finishedTime;
+		return &jobs[cursor++];
+	}
+} MEMORY_POOL;
+
 MEMORY_POOL mPool;
 
-TREE * _malloc() {
-   return &mPool.pool[mPool.cursor++];
+typedef struct _jobq {
+	JOB *heap[MAX_Q];
+	int heapSize;
+
+	int compare(JOB *a, JOB *b) {
+		if (a->finshedTime != b->finshedTime) return  a->finshedTime < b->finshedTime;
+		if (a->stepId != b->stepId) return a->stepId > b->stepId;
+		return a->toolPt < b->toolPt;
+	}
+
+	int push(JOB *value)
+	{
+		if (heapSize + 1 > MAX_Q)
+		{
+			return 0;
+		}
+
+		heap[heapSize] = value;
+
+		int current = heapSize;
+		while (current > 0 && compare(heap[current] , heap[(current - 1) / 2]))
+		{
+			JOB* temp = heap[(current - 1) / 2];
+			heap[(current - 1) / 2] = heap[current];
+			heap[current] = temp;
+			current = (current - 1) / 2;
+		}
+
+		heapSize = heapSize + 1;
+
+		return 1;
+	}
+
+	int pop(JOB** value)
+	{
+		if (heapSize <= 0)
+		{
+			return -1;
+		}
+
+		*value = heap[0];
+		heapSize = heapSize - 1;
+
+		heap[0] = heap[heapSize];
+
+		int current = 0;
+		while (current * 2 + 1 < heapSize)
+		{
+			int child;
+			if (current * 2 + 2 == heapSize)
+			{
+				child = current * 2 + 1;
+			}
+			else
+			{
+				if (compare (heap[current * 2 + 1], heap[current * 2 + 2])) {
+					child = current * 2 + 1;
+				}
+				else {
+					child = current * 2 + 2;
+				}
+			}
+
+			if (compare(heap[current] , heap[child]))
+			{
+				break;
+			}
+
+			JOB* temp = heap[current];
+			heap[current] = heap[child];
+			heap[child] = temp;
+
+			current = child;
+		}
+		return 1;
+	}
+} JOBQ;
+
+JOBQ jobQ; 
+
+
+
+int getEmptyToolPt(int stepId) {
+	int value;
+	int res = tools[stepId].pop(&value); // return -1 when empty
+	if (res < 0) { return -1; }
+	else { return value; }
 }
 
-void _strcpy(char src[], char dest[]) {
-   while (*src != 0) {
-      *dest = *src;
-      src++;
-      dest++;
-   }
+void run(int stepId, int availToolPt, int timestamp) {
+	JOB *job = mPool.get(stepId, availToolPt, timestamp + availToolPt);
+	jobQ.push(job);
 }
 
-int strToInt(char str[]) {
-   int s2i = 0;
-   while (*str) {
-      s2i = (s2i << 5) + *str - 'a' + 1;
-      str++;
-   }
-   return s2i;
+// run if avail else wait
+void process(int timestamp, int stepId) {
+	// out of steps (출하창고)
+	if (stepId == MY_N) {
+		++waitQ[stepId];
+		return;
+	}
+	int availToolPt = getEmptyToolPt(stepId);
+	// run 
+	if (availToolPt > 0) {
+		run(stepId, availToolPt, timestamp);
+	}
+	//wait
+	else {
+		++waitQ[stepId];
+	}
 }
 
-void initChildren(TREE *children[]) {
-
-   for (register int i = 0; i < MAX_CHILDREN; ++i) {
-      children[i] = 0;
-   }
+void clearWaiting(int stepId, int latestEmptyTime) {
+	int availToolPt = getEmptyToolPt(stepId);
+	run(stepId, availToolPt, latestEmptyTime);
+	--waitQ[stepId];
 }
 
-TREE *createNode(char str[]) {
-   TREE *newNode = _malloc();
-   newNode->s2i = strToInt(str);
-   newNode->parent = 0;
-   newNode->childCnt = 0;
-   initChildren(newNode->children);
-   return newNode;
+void releaseTool(int stepId, int pt) {
+	tools[stepId].push(pt); // release tool
 }
 
-TREE *createNodeInt(int s2i) {
-   TREE *newNode = _malloc();
-   newNode->s2i = s2i;
-   newNode->parent = 0;
-   initChildren(newNode->children);
-   return newNode;
+void init(int N) {
+	MY_N = N;
+	// init heap
+	for (register int i = 0; i <= MY_N; ++i) {
+		tools[i].heapSize = tools[i].total = 0;
+		waitQ[i] = 0;
+	}
+	// init job queue
+	jobQ.heapSize = 0;
+	mPool.cursor = 0;
 }
 
-void updateChildCnt(TREE *node, int delta) {
-   while (node) {
-      node->childCnt += delta;
-      node = node->parent;
-   }
+void setupTool(int T, int stepNo[5000], int procTime[5000]) {
+	//create heap
+	for (register int i = 0; i < T; ++i) {
+		tools[stepNo[i]].push(procTime[i]);
+		++tools[stepNo[i]].total;
+	}
 }
 
-void insertNode(TREE *parent, TREE *newNode) {
-   TREE **now = &(parent->children[0]);
-   // find children pos
-   int cursor = 0;
-   while (*now) {
-      ++cursor;
-      ++now;
-   }
-   newNode->parent = parent;
-   parent->children[cursor] = newNode;
-   
+void addLot(int time, int number) {
+	while (jobQ.heapSize > 0 && jobQ.heap[0]->finshedTime <= time) {
+		JOB* job;
+		jobQ.pop(&job);
+		releaseTool(job->stepId, job->toolPt);
+		if (waitQ[job->stepId] > 0) {
+			clearWaiting(job->stepId, job->finshedTime); // process to this step
+		}
+		process(job->finshedTime, job->stepId + 1); // process to next step
+	}
+
+	for (register int i = 0; i < number; ++i) {
+		process(time, 0);
+	}
 }
 
-TREE *getNearestNodeByPath(TREE *parent, char path[], int *offset) {
-   char name[MAX_STR];
-   //start from the next to first slash
-   path = path + *offset + 1;
-   register int i = 0;
+int simulate(int time, int wip[MAX_N]) {
+	//handle event (smaller than time)
+	while (jobQ.heapSize > 0 && jobQ.heap[0]->finshedTime <= time) {
+		JOB* job;
+		jobQ.pop(&job);
+		releaseTool(job->stepId, job->toolPt);
+		if (waitQ[job->stepId] > 0) {
+			clearWaiting(job->stepId, job->finshedTime); // process to this step
+		}
+		process(job->finshedTime, job->stepId + 1); // process to next step
+	}
 
-   //get name
-   while (*path != '/' && *path != 0) {
-      name[i] = *path;
-      ++i;
-      ++path;
-   }
-   name[i] = 0;
-   *offset = *offset + i + 1;
-
-   int pathInt = strToInt(name);
-
-   for (i = 0; name[0] && i < MAX_CHILDREN; ++i) {
-      if (parent->children[i] != 0) {
-         if (parent->children[i]->s2i == pathInt) {
-            return parent->children[i];
-         }
-      }
-   }
-   return 0;
+	for (register int stepId = 0; stepId < MY_N; ++stepId) {
+		wip[stepId] = waitQ[stepId] + tools[stepId].getRunningCnt();
+	}
+	return waitQ[MY_N];
 }
 
-TREE *getNodeByPath(char path[]) {
-   TREE *node = root;
-   TREE *prev = 0;
-   int offset = 0;
 
-   while (node) {
-      prev = node;
-      node = getNearestNodeByPath(node, path, &offset);
-   }
-   return prev;
-}
 
-//To implement
-void init(int n) {
-   char empty[2] = "";
-   N = n;
-   mPool.cursor = 0;
-   root = createNode(empty);
-}
-
-void cmd_mkdir(char path[PATH_MAXLEN + 1], char name[NAME_MAXLEN + 1]) {
-   TREE *newNode = createNode(name);
-   TREE *parent = getNodeByPath(path);
-   insertNode(parent, newNode);
-   updateChildCnt(parent, 1);
-}
-
-void cmd_rm(char path[PATH_MAXLEN + 1]) {
-   TREE *node = getNodeByPath(path);
-   TREE *parent = node->parent;
-   for (register int i = 0; i < MAX_CHILDREN; ++i) {
-      if (parent->children[i] != 0) {
-         if (node->s2i == parent->children[i]->s2i) {
-            int delChildCnt = parent->children[i]->childCnt + 1;
-            parent->children[i] = 0;
-            updateChildCnt(parent, (-1)*delChildCnt);
-            break;
-         }
-      }
-   }
-}
-
-void copy(TREE *srcNode, TREE *destNode) {
-   if (!srcNode) { return; }
-
-   for (int i = 0; srcNode->children[i] != 0; ++i) {
-      TREE *newNode = createNodeInt(srcNode->s2i);
-      insertNode(destNode, newNode);
-      copy(srcNode->children[i], destNode->children[i]);
-   }
-}
-void cmd_cp(char srcPath[PATH_MAXLEN + 1], char dstPath[PATH_MAXLEN + 1]) {
-   TREE *srcNode = getNodeByPath(srcPath);
-   TREE *destNode = getNodeByPath(dstPath);
-
-   copy(srcNode, destNode);
-   updateChildCnt(destNode, srcNode->childCnt);
-}
-
-void cmd_mv(char srcPath[PATH_MAXLEN + 1], char dstPath[PATH_MAXLEN + 1]) {
-   TREE *srcNode = getNodeByPath(srcPath);
-   TREE *destNode = getNodeByPath(dstPath);
-
-   cmd_rm(srcPath);
-   insertNode(destNode, srcNode);
-   updateChildCnt(destNode, srcNode->childCnt+1);
-   
-}
-
-int getSubdirCount(TREE *node) {
-   if (!node) { return 0; }
-
-   int cnt = 0;
-
-   for (int i = 0; node->children[i] != 0; ++i) {
-      cnt += getSubdirCount(node->children[i]);
-   }
-   return cnt;
-}
-
-int cmd_find(char path[PATH_MAXLEN + 1]) {
-   TREE *node = getNodeByPath(path);
-
-   return node->childCnt;
-}
 ```
