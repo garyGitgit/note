@@ -1,103 +1,55 @@
-```
-#define MAX_MESSAGE   1000000 + 1
 #define MAX_USER      1000
-#define MAX_TAG       5000
-#define MAX_CHAR      26
-#define MAX_LATEST    5
-#define MAX_TAG_LEN   8
+#define MAX_POST      100000
+#define MAX_LATEST    10
 
-typedef struct _trie {
-	int top5Messages[MAX_LATEST];
-	int cnt;
-	int terminal;
-	struct _trie *children[MAX_CHAR];
+int MY_N;
 
-} TRIE;
+typedef struct _follower {
+	int id;
+	int timestamp;
+} FOLLOWER;
 
-typedef struct _memoryPool {
-	TRIE memoryPool[MAX_TAG];
-	int cursor;
-} MEMORY_POOL;
+typedef struct _post {
+	int id;
+	int timestamp;
+	int like;
+} POST;
 
-MEMORY_POOL mPool;
-TRIE* root;
-
-typedef struct _msg{
-	int time;
-	int userID;
-} MESSAGE;
+POST posts[MAX_POST];
 
 typedef struct _user {
-	int following[MAX_USER];
+	FOLLOWER following[MAX_USER];
 	int followerCnt;
-	int latestMsgIDs[MAX_LATEST];
+	POST latestMsgIDs[MAX_LATEST];
 	int msgCnt;
 
-	void follow(int userId) {
-		following[followerCnt++] = userId;
+	void follow(int userId, int timestamp) {
+		following[followerCnt].id = userId;
+		following[followerCnt].timestamp = timestamp;
+		++followerCnt;
 	}
 } USER;
 
-MESSAGE messages[MAX_MESSAGE];
-
-
-
-TRIE* _malloc() {
-	return &mPool.memoryPool[mPool.cursor++];
-}
-
-int getTimeInt(char str[]) {
-	return 3600 * (10 * (str[0] - '0') + (str[1] - '0')) + 60 * (10 * (str[3] - '0') + (str[4] - '0')) + (10 * (str[6] - '0') + (str[7] - '0'));
-}
-
-TRIE* createTrieNode() {
-	TRIE *newNode = _malloc();
-	for (register int i = 0; i < MAX_CHAR; ++i) {
-		newNode->children[i] = 0;
-	}
-	return newNode;
-}
-
-TRIE* searchTrieNode(char hashTag[]) {
-	char c;
-	TRIE* curr = root;
-	while (c = *hashTag++) {
-		if (!curr == 0){ return 0; } //no found
-
-		curr = curr->children[c - 'a'];
-	}
-	return curr;
-}
-
-// run when createMessage
-void insertTrie(char str[], int msgID) {
-	char c;
-	TRIE* curr = root;
-	while (c = *str++) {
-		int idx = c - 'a';
-		if (!curr->children[idx]) {
-			curr->children[idx] = createTrieNode();
-		}
-		curr = curr->children[idx];
-	}
-
-	// terminal node
-	if (curr->cnt < MAX_LATEST){
-		curr->top5Messages[curr->cnt++] = msgID;
-		curr->terminal = 1;
-	}
-	//if full delete the last message and insert a new message
-	else{
-		for (register int i = MAX_LATEST -1; i >= 0; --i){
-			curr->top5Messages[i + 1] = curr->top5Messages[i];
-		}
-		curr->top5Messages[0] = msgID;
-	}
-}
-
 USER users[MAX_USER];
+int currentTime = 0;
 
+int compare(POST a, POST b) {
+	if (currentTime - a.timestamp <= 1000 && currentTime - b.timestamp <= 1000) {
+		if (a.like != b.like) { return a.timestamp < b.timestamp; }
+		return (a.like > b.like);
+	}
+	else if (currentTime - a.timestamp <= 1000 && currentTime - b.timestamp > 1000) {
+		return 0;
+	}
+	else if (currentTime - a.timestamp > 1000 && currentTime - b.timestamp <= 1000) {
+		return 1;
+	}
+	else {
+		return (a.timestamp < b.timestamp);
+	}
+}
 
+// postid index
 void insertionSort(int arr[], int cnt)
 {
 	int temp;
@@ -109,11 +61,8 @@ void insertionSort(int arr[], int cnt)
 		temp = arr[i];
 		j = i - 1;
 
-		while (j >= 0 && (messages[temp].time >= messages[arr[j]].time))
+		while ((j >= 0) && compare(posts[temp], posts[j]))
 		{
-			if (messages[temp].time == messages[arr[j]].time && messages[temp].userID > messages[arr[j]].userID){
-				break;
-			}
 			arr[j + 1] = arr[j];
 			j = j - 1;
 		}
@@ -122,94 +71,93 @@ void insertionSort(int arr[], int cnt)
 }
 
 
-void init()
-{
-	mPool.cursor = 0;
-	root = createTrieNode();
-	for (register int i = 0; i < MAX_CHAR; ++i) {
-		root->children[i] = 0;
+void post(int userID, int postID, int timestamp) {
+	posts[postID].like = 0;
+	posts[postID].timestamp = timestamp;
+
+	//handle user
+	//if full, discard old one
+
+	if (users[userID].msgCnt == MAX_LATEST) {
+		int tmp[MAX_LATEST + 1];
+		tmp[0] = postID;
+		for (register int i = 1; i <= MAX_LATEST; i++) {
+			tmp[i] = users[userID].latestMsgIDs[i - 1].id;
+		}
+
+		insertionSort(tmp, MAX_LATEST + 1);
+
+		//copy
+		for (register int i = 0; i < MAX_LATEST; i++) {
+			users[userID].latestMsgIDs[i] = posts[tmp[i]];
+		}
 	}
+	else {
+		users[userID].latestMsgIDs[users[userID].msgCnt].id = postID; // insert to user
+		users[userID].latestMsgIDs[users[userID].msgCnt].timestamp = timestamp;
+		users[userID].latestMsgIDs[users[userID].msgCnt].like = 0;
+		++users[userID].msgCnt;
+	}
+}
+
+
+void init(int N)
+{
+	MY_N = N;
 	for (register int i = 0; i < MAX_USER; ++i) {
 		users[i].followerCnt = 0;
+		users[i].msgCnt = 0;
+	}
+	currentTime = 0;
+	for (register int i = 0; i < MAX_POST; ++i) {
+		posts[i].like = 0;
 	}
 }
 
-void createMessage(int msgID, int userID, char msgData[])
+void follow(int uID1, int uID2, int timestamp)
 {
-	int time = getTimeInt(msgData);
-	char hashTag[MAX_TAG_LEN + 1];
-	int idx = 0;
-	users[userID].latestMsgIDs[users[userID].msgCnt++] = msgID; // insert to user
-	//insert to messags
-	messages[msgID].time = time;
-	messages[msgID].userID = userID;
-
-	//insert to time
-	msgData = msgData + 10; // skip timestamp
-	//insert Trie
-	while (1) {
-		if (*msgData >= 'a' && *msgData <= 'z') {
-			hashTag[idx++] = *msgData;
-		}
-		else if (*msgData == ' ' || *msgData == 0) {
-			hashTag[idx] = 0;
-			insertTrie(hashTag, msgID);
-			idx = 0;
-		}
-		if (!*msgData){break;}
-		msgData++;
-	}	
+	users[uID1].follow(uID2, timestamp);
 }
 
-void followUser(int userID1, int userID2)
+void makePost(int uID, int pID, int timestamp)
 {
-	users[userID1].follow(userID2);
+	post(uID, pID, timestamp);
 }
 
-int searchByHashtag(char tagName[], int retIDs[])
+void like(int pID, int timestamp)
 {
-	int res = 0;
-
-	TRIE * node = searchTrieNode(tagName);
-	if (!node){ return 0; }
-
-	for (register int i = 0; node->cnt; ++i){
-		retIDs[i] = node->top5Messages[i];
-	}
-	return node->cnt;
+	posts[pID].timestamp = timestamp;
 }
 
-int getMessages(int userID, int retIDs[])
+void getFeed(int uID, int timestamp, int pIDList[])
 {
-	int totalMsgs[MAX_USER * MAX_LATEST]; 
+	currentTime = timestamp;
+	int totalMsgs[MAX_USER * MAX_LATEST];
 	int cnt = 0;
 	//get user's latest msgs
-	for (register int i = 0; i < users[userID].msgCnt; ++i){
-		totalMsgs[cnt++] = users[userID].latestMsgIDs[i];
+	for (register int i = 0; i < users[uID].msgCnt; ++i) {
+		totalMsgs[cnt++] = users[uID].latestMsgIDs[i].id;
 	}
 
 	//get followings latest msgs
-	for (register int i = 0; i < users[userID].followerCnt; ++i){
-		int followUserID = users[userID].following[i];
-		for (register int j = 0; j < users[followUserID].msgCnt; ++j){
-			totalMsgs[cnt++] = users[followUserID].latestMsgIDs[j];
+	for (register int i = 0; i < users[uID].followerCnt; ++i) {
+		int followUserID = users[uID].following[i].id;
+		for (register int j = 0; j < users[followUserID].msgCnt; ++j) {
+			totalMsgs[cnt++] = users[followUserID].latestMsgIDs[j].id;
 		}
 	}
-
-	if (cnt == 0){ return 0; }
 
 	// sort all 
 	insertionSort(totalMsgs, cnt);
 
-	for (register int i = 0; i < cnt && i < MAX_LATEST; ++i){
-		retIDs[i] = totalMsgs[i];
+	if (cnt > MAX_LATEST) {
+		for (register int i = 0; i < MAX_LATEST; ++i) {
+			pIDList[i] = totalMsgs[cnt - i - 1];
+		}
 	}
-	if (cnt > MAX_LATEST){
-		return MAX_LATEST;
-	}
-	else{
-		return cnt;
+	else {
+		for (register int i = 0; i < cnt; ++i) {
+			pIDList[i] = totalMsgs[cnt - i - 1];
+		}
 	}
 }
-
-```
