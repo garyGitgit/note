@@ -1,3 +1,4 @@
+```
 #define MAX_USER      1000
 #define MAX_POST      100000
 #define MAX_LATEST    10
@@ -161,3 +162,4 @@ void getFeed(int uID, int timestamp, int pIDList[])
 		}
 	}
 }
+```
