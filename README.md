@@ -3,12 +3,13 @@
 #define MAXServer (10)
 #define MAX_USER 10000
 
-typedef struct _user{
+typedef struct _user {
 	int id;
 	int axis;
-	int mostFarServer;
-	int cnt; 
-} USER ;
+	int orderedServer[MAXServer];
+	int cnt;
+	int mostCursor;
+} USER;
 
 typedef struct _server {
 	int axis;
@@ -25,8 +26,8 @@ int serverCnt, userCnt;
 //heap
 
 
-int compare(USER a, USER b){
-	if (a.mostFarServer != b.mostFarServer) { return a.mostFarServer > b.mostFarServer; }
+int compare(USER a, USER b) {
+	if (a.orderedServer[a.mostCursor] != b.orderedServer[a.mostCursor]) { return a.orderedServer[a.mostCursor] > b.orderedServer[b.mostCursor]; }
 	return a.id < b.id;
 }
 int heapPush(USER value)
@@ -53,7 +54,7 @@ int heapPush(USER value)
 	return 1;
 }
 
-int heapPop(USER *value)
+int heapPop(USER* value)
 {
 	if (userCnt <= 0)
 	{
@@ -75,10 +76,10 @@ int heapPop(USER *value)
 		}
 		else
 		{
-			child = compare(users[current * 2 + 1] , users[current * 2 + 2]) ? current * 2 + 1 : current * 2 + 2;
+			child = compare(users[current * 2 + 1], users[current * 2 + 2]) ? current * 2 + 1 : current * 2 + 2;
 		}
 
-		if (compare(users[current] , users[child]))
+		if (compare(users[current], users[child]))
 		{
 			break;
 		}
@@ -101,20 +102,20 @@ void init(int L, int N, int C, int axis[MAXServer])
 	userCnt = 0;
 
 	// set server axis and capa
-	for (register int i = 0; i < N; ++i){
+	for (register int i = 0; i < N; ++i) {
 		servers[serverCnt].axis = axis[i];
 		servers[serverCnt].capa = C;
 		++serverCnt;
 	}
 }
 
-void insertionSort(void)
+void insertionSort(int input[])
 {
 	int temp;
 	int i;
 	int j;
 
-	for (i = 1; i < num; i++)
+	for (i = 1; i < MY_N; i++)
 	{
 		temp = input[i];
 		j = i - 1;
@@ -130,12 +131,24 @@ void insertionSort(void)
 
 
 
-int getMostFarServer(int axis){
+int getMostFarServer(int axis) {
 	int tmp[MAXServer];
 
-	for (register int i = 0; i < MY_N; ++i){
-		
+	for (register int i = 0; i < MY_N; ++i) {
+		int delta = axis - servers[i].axis;
+		int dist1, dist2;
+		if (delta < 0) { 
+			dist1 = MY_N + (axis - servers[i].axis);
+			dist2 = servers[i].axis - axis;
+		}
+		else {
+			dist1 = servers[i].axis - axis;
+			dist2 = MY_N + (axis - servers[i].axis);
+		}
+		tmp[i] = (dist1 > dist2) ? dist1 : dist2;
 	}
+
+	insertionSort(tmp);
 }
 
 int add_user(int uid, int axis)
@@ -143,7 +156,7 @@ int add_user(int uid, int axis)
 	USER newUser;
 	newUser.id = uid;
 	newUser.axis = axis;
-	newUser.mostFarServer = getMostFarServer();
+	newUser.mostFarServer = getMostFarServer(newUser.axis);
 
 	// update user priority
 	heapPush(newUser);
