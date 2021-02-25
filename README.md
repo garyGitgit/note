@@ -1,5 +1,4 @@
-```
-#define MAX_USER      1000
+```#define MAX_USER      1000
 #define MAX_POST      100000
 #define MAX_LATEST    10
 
@@ -34,19 +33,19 @@ typedef struct _user {
 USER users[MAX_USER];
 int currentTime = 0;
 
-int compare(POST a, POST b) {
-	if (currentTime - a.timestamp <= 1000 && currentTime - b.timestamp <= 1000) {
-		if (a.like != b.like) { return a.timestamp < b.timestamp; }
-		return (a.like > b.like);
+int compare(int a, int b) {
+	if (currentTime - posts[a].timestamp <= 1000 && currentTime - posts[b].timestamp <= 1000) {
+		if (posts[a].like == posts[b].like) { return posts[a].timestamp > posts[b].timestamp; }
+		return (posts[a].like > posts[b].like);
 	}
-	else if (currentTime - a.timestamp <= 1000 && currentTime - b.timestamp > 1000) {
+	else if (currentTime - posts[a].timestamp <= 1000 && currentTime - posts[b].timestamp > 1000) {
 		return 0;
 	}
-	else if (currentTime - a.timestamp > 1000 && currentTime - b.timestamp <= 1000) {
+	else if (currentTime - posts[a].timestamp > 1000 && currentTime - posts[b].timestamp <= 1000) {
 		return 1;
 	}
 	else {
-		return (a.timestamp < b.timestamp);
+		return (posts[a].timestamp < posts[b].timestamp);
 	}
 }
 
@@ -62,7 +61,7 @@ void insertionSort(int arr[], int cnt)
 		temp = arr[i];
 		j = i - 1;
 
-		while ((j >= 0) && compare(posts[temp], posts[j]))
+		while ((j >= 0) && compare(temp, arr[j]))
 		{
 			arr[j + 1] = arr[j];
 			j = j - 1;
@@ -128,6 +127,7 @@ void makePost(int uID, int pID, int timestamp)
 void like(int pID, int timestamp)
 {
 	posts[pID].timestamp = timestamp;
+	++posts[pID].like;
 }
 
 void getFeed(int uID, int timestamp, int pIDList[])
