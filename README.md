@@ -1,165 +1,167 @@
-```#define MAX_USER      1000
-#define MAX_POST      100000
-#define MAX_LATEST    10
+```
+#define MAXLength (10000)
+#define MAXServer (10)
+#define MAX_USER 10000
 
-int MY_N;
-
-typedef struct _follower {
+typedef struct _user{
 	int id;
-	int timestamp;
-} FOLLOWER;
+	int axis;
+	int mostFarServer;
+	int cnt; 
+} USER ;
 
-typedef struct _post {
-	int id;
-	int timestamp;
-	int like;
-} POST;
+typedef struct _server {
+	int axis;
+	int capa;
 
-POST posts[MAX_POST];
-
-typedef struct _user {
-	FOLLOWER following[MAX_USER];
-	int followerCnt;
-	POST latestMsgIDs[MAX_LATEST];
-	int msgCnt;
-
-	void follow(int userId, int timestamp) {
-		following[followerCnt].id = userId;
-		following[followerCnt].timestamp = timestamp;
-		++followerCnt;
-	}
-} USER;
+} SERVER;
 
 USER users[MAX_USER];
-int currentTime = 0;
+SERVER servers[MAXServer];
 
-int compare(int a, int b) {
-	if (currentTime - posts[a].timestamp <= 1000 && currentTime - posts[b].timestamp <= 1000) {
-		if (posts[a].like == posts[b].like) { return posts[a].timestamp > posts[b].timestamp; }
-		return (posts[a].like > posts[b].like);
-	}
-	else if (currentTime - posts[a].timestamp <= 1000 && currentTime - posts[b].timestamp > 1000) {
+int MY_N, MY_L;
+int serverCnt, userCnt;
+
+//heap
+
+
+int compare(USER a, USER b){
+	if (a.mostFarServer != b.mostFarServer) { return a.mostFarServer > b.mostFarServer; }
+	return a.id < b.id;
+}
+int heapPush(USER value)
+{
+	if (userCnt + 1 > MAX_USER)
+	{
 		return 0;
 	}
-	else if (currentTime - posts[a].timestamp > 1000 && currentTime - posts[b].timestamp <= 1000) {
-		return 1;
+
+	users[userCnt] = value;
+
+	int current = userCnt;
+	while (current > 0 && compare(users[current], users[(current - 1) / 2]))
+	{
+		// users[current] < users[(current - 1) / 2]
+		USER temp = users[(current - 1) / 2];
+		users[(current - 1) / 2] = users[current];
+		users[current] = temp;
+		current = (current - 1) / 2;
 	}
-	else {
-		return (posts[a].timestamp < posts[b].timestamp);
+
+	userCnt = userCnt + 1;
+
+	return 1;
+}
+
+int heapPop(USER *value)
+{
+	if (userCnt <= 0)
+	{
+		return -1;
+	}
+
+	*value = users[0];
+	userCnt = userCnt - 1;
+
+	users[0] = users[userCnt];
+
+	int current = 0;
+	while (current * 2 + 1 < userCnt)
+	{
+		int child;
+		if (current * 2 + 2 == userCnt)
+		{
+			child = current * 2 + 1;
+		}
+		else
+		{
+			child = compare(users[current * 2 + 1] , users[current * 2 + 2]) ? current * 2 + 1 : current * 2 + 2;
+		}
+
+		if (compare(users[current] , users[child]))
+		{
+			break;
+		}
+
+		USER temp = users[current];
+		users[current] = users[child];
+		users[child] = temp;
+
+		current = child;
+	}
+	return 1;
+}
+
+
+void init(int L, int N, int C, int axis[MAXServer])
+{
+	MY_L = L;
+	MY_N = N;
+	serverCnt = 0;
+	userCnt = 0;
+
+	// set server axis and capa
+	for (register int i = 0; i < N; ++i){
+		servers[serverCnt].axis = axis[i];
+		servers[serverCnt].capa = C;
+		++serverCnt;
 	}
 }
 
-// postid index
-void insertionSort(int arr[], int cnt)
+void insertionSort(void)
 {
 	int temp;
 	int i;
 	int j;
 
-	for (i = 1; i < cnt; i++)
+	for (i = 1; i < num; i++)
 	{
-		temp = arr[i];
+		temp = input[i];
 		j = i - 1;
 
-		while ((j >= 0) && compare(temp, arr[j]))
+		while ((temp < input[j]) && (j >= 0))
 		{
-			arr[j + 1] = arr[j];
+			input[j + 1] = input[j];
 			j = j - 1;
 		}
-		arr[j + 1] = temp;
+		input[j + 1] = temp;
 	}
 }
 
 
-void post(int userID, int postID, int timestamp) {
-	posts[postID].like = 0;
-	posts[postID].timestamp = timestamp;
 
-	//handle user
-	//if full, discard old one
+int getMostFarServer(int axis){
+	int tmp[MAXServer];
 
-	if (users[userID].msgCnt == MAX_LATEST) {
-		int tmp[MAX_LATEST + 1];
-		tmp[0] = postID;
-		for (register int i = 1; i <= MAX_LATEST; i++) {
-			tmp[i] = users[userID].latestMsgIDs[i - 1].id;
-		}
-
-		insertionSort(tmp, MAX_LATEST + 1);
-
-		//copy
-		for (register int i = 0; i < MAX_LATEST; i++) {
-			users[userID].latestMsgIDs[i] = posts[tmp[i]];
-		}
-	}
-	else {
-		users[userID].latestMsgIDs[users[userID].msgCnt].id = postID; // insert to user
-		users[userID].latestMsgIDs[users[userID].msgCnt].timestamp = timestamp;
-		users[userID].latestMsgIDs[users[userID].msgCnt].like = 0;
-		++users[userID].msgCnt;
+	for (register int i = 0; i < MY_N; ++i){
+		
 	}
 }
 
-
-void init(int N)
+int add_user(int uid, int axis)
 {
-	MY_N = N;
-	for (register int i = 0; i < MAX_USER; ++i) {
-		users[i].followerCnt = 0;
-		users[i].msgCnt = 0;
-	}
-	currentTime = 0;
-	for (register int i = 0; i < MAX_POST; ++i) {
-		posts[i].like = 0;
-	}
+	USER newUser;
+	newUser.id = uid;
+	newUser.axis = axis;
+	newUser.mostFarServer = getMostFarServer();
+
+	// update user priority
+	heapPush(newUser);
+
+
+	return 0;
 }
 
-void follow(int uID1, int uID2, int timestamp)
+int remove_user(int uid)
 {
-	users[uID1].follow(uID2, timestamp);
+	USER popUser;
+	heapPop(&popUser);
+	return 0;
 }
 
-void makePost(int uID, int pID, int timestamp)
+int get_users(int sid)
 {
-	post(uID, pID, timestamp);
+	return 0;
 }
 
-void like(int pID, int timestamp)
-{
-	posts[pID].timestamp = timestamp;
-	++posts[pID].like;
-}
-
-void getFeed(int uID, int timestamp, int pIDList[])
-{
-	currentTime = timestamp;
-	int totalMsgs[MAX_USER * MAX_LATEST];
-	int cnt = 0;
-	//get user's latest msgs
-	for (register int i = 0; i < users[uID].msgCnt; ++i) {
-		totalMsgs[cnt++] = users[uID].latestMsgIDs[i].id;
-	}
-
-	//get followings latest msgs
-	for (register int i = 0; i < users[uID].followerCnt; ++i) {
-		int followUserID = users[uID].following[i].id;
-		for (register int j = 0; j < users[followUserID].msgCnt; ++j) {
-			totalMsgs[cnt++] = users[followUserID].latestMsgIDs[j].id;
-		}
-	}
-
-	// sort all 
-	insertionSort(totalMsgs, cnt);
-
-	if (cnt > MAX_LATEST) {
-		for (register int i = 0; i < MAX_LATEST; ++i) {
-			pIDList[i] = totalMsgs[cnt - i - 1];
-		}
-	}
-	else {
-		for (register int i = 0; i < cnt; ++i) {
-			pIDList[i] = totalMsgs[cnt - i - 1];
-		}
-	}
-}
 ```
