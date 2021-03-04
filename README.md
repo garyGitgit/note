@@ -32,7 +32,6 @@ user id 배열에서 count 도 갖고 있어서 event 를 add 하고 delete 할 
 ```
 
 ```cpp
-
 //void mstrcpy(char dst[], const char src[]) {
 //	int c = 0;
 //	while ((dst[c] = src[c]) != 0) ++c;
@@ -49,7 +48,7 @@ user id 배열에서 count 도 갖고 있어서 event 를 add 하고 delete 할 
 # define MAX_CHAR 26
 # define MAX_EVENT 5
 
-typedef struct _user{
+typedef struct _user {
 	int groups[MAX_GROUP];
 	int groupCnt;
 	int eventCnt;
@@ -57,29 +56,39 @@ typedef struct _user{
 
 USER users[MAX_USER];
 
-typedef struct _trie{
+typedef struct _trie {
 	int events[MAX_GROUP][MAX_EVENT];
 	int eventsCnt[MAX_GROUP];
 
 	struct _trie *children[MAX_CHAR];
 
-	void add(char *str){
+	_trie (){
+		for (register int i = 0; i < MAX_GROUP; ++i) {
+			eventsCnt[i] = 0;
+		}
+
+		for (register int i = 0; i < MAX_CHAR; ++i) {
+			children[i] = 0;
+		}
+	};
+
+	_trie* add(char *str) {
 		TRIE *ptr = root;
-		for (; *str; str++){
+		for (; *str; str++) {
 			int idx = *str - 'a';
-			if (!ptr->children[idx]){
+			if (!ptr->children[idx]) {
 				children[idx] = new TRIE();
 			}
-			else{
-				ptr = children[idx];
-			}
+			ptr = children[idx];
 		}
+		return ptr;
 	}
 
-	void clear(){
-		for (int i = 0; i < MAX_CHAR; ++i){
-			if (!children[i]){
-				children[i]->clear();
+	void clearall() {
+		for (int i = 0; i < MAX_CHAR; ++i) {
+			if (!children[i]) {
+				children[i]->clearall();
+				delete children[i];
 			}
 		}
 	}
@@ -89,14 +98,16 @@ TRIE *root = 0;
 
 void init()
 {
-	if (!root){
-		root.clear();
+	if (!root) {
+		root->clearall();
 	}
 	root = new TRIE();
 }
 
 void addEvent(int uid, char ename[], int groupid)
 {
+	TRIE *node = root->add(ename);
+	node->events[groupid][node->eventsCnt[groupid]++] = uid;
 }
 
 int deleteEvent(int uid, char ename[])
