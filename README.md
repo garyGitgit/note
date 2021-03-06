@@ -1,126 +1,134 @@
 ```
-주제: 그룹별로 일정을 등록하고 삭제하는 문제
-그룹별이 핵심임. 
-근데 그룹별로 일정을 저장할 필요는 없음.
-Trie 를 각각 갖고 있으면 메모리 낭비임. 
-
-핵심 자료구조
-
-Hash -> group 을 linked list 로 갖고 있음.각각의 group struct 는 user id list 를 갖고 있음. 
-각 user 가 어떤 group id 에 속하는지 배열 (10000) 의 링크드 리스트
-
-addEvent:
-해당 ename 으로 hash 를 탐색해서 group id 위치에 있는 user list 에 uid 추가 count ++
-(0번째 위치는 master 아니면 normal)
-
-deleteEvent:
-ename 으로 trie 탐색해서 uid 를 찾음 (uid 가 속한 그룹을 갖는 자료구조도 필요)
-uid 가 속한 group 들 리스트를 전부 가져와서 gid 로 user list 탐색
-uid 가 발견되면, master 인지 normal 인지 비교해서 모두 삭제할지, 하나만 삭제할지 결정
-master 이면 count =0 으로 바꾸고, normal 이면 count -1 하고, 빈칸 하나씩 땡긴다 (그래봤자 5개)
-
-changeEvent:
-deleteEvent 를 하고 addEvent 를 하면 됨.
-master 인 경우 addEvent 를 그 아래 있던 event 들 수만큼 진행
-
-getCount:
-user id 배열에서 count 도 갖고 있어서 event 를 add 하고 delete 할 때마다 count 를 줄이고 늘림
 
 
-```
-
-```cpp
-//void mstrcpy(char dst[], const char src[]) {
-//	int c = 0;
-//	while ((dst[c] = src[c]) != 0) ++c;
-//}
-
-//int mstrcmp(const char str1[], const char str2[]) {
-//	int c = 0;
-//	while (str1[c] != 0 && str1[c] == str2[c]) ++c;
-//	return str1[c] - str2[c];
-//}
-
-# define MAX_USER 10000
+# define MAX_USER 1000
 # define MAX_GROUP 100
-# define MAX_CHAR 26
+# define ALPHABET 26
 # define MAX_EVENT 5
+# define MAX_HASH 40009
+# define RINT register int
+# define ULL unsigned long long
 
-typedef struct _user {
-	int groups[MAX_GROUP];
-	int groupCnt;
-	int eventCnt;
-} USER;
+typedef struct _hash {
+	int header;
+	ULL name;
+	int uIDList[MAX_GROUP][MAX_EVENT];
+	int uIDCnt [MAX_GROUP];
+} HASH;
 
-USER users[MAX_USER];
+HASH hash[MAX_HASH], ini;
+int userCnt [MAX_USER];
+int addHash (char *str){
+	ULL name = 0;
+	str = str + 2; // ignore first 2 char for header
 
-typedef struct _trie {
-	int events[MAX_GROUP][MAX_EVENT];
-	int eventsCnt[MAX_GROUP];
-
-	struct _trie *children[MAX_CHAR];
-
-	_trie (){
-		for (register int i = 0; i < MAX_GROUP; ++i) {
-			eventsCnt[i] = 0;
-		}
-
-		for (register int i = 0; i < MAX_CHAR; ++i) {
-			children[i] = 0;
-		}
-	};
-
-	_trie* add(char *str) {
-		TRIE *ptr = root;
-		for (; *str; str++) {
-			int idx = *str - 'a';
-			if (!ptr->children[idx]) {
-				children[idx] = new TRIE();
-			}
-			ptr = children[idx];
-		}
-		return ptr;
+	for (; *str; ++str){
+		name = (name << 5) + *str - 'a' + 1;
 	}
+	int idx = name % MAX_HASH;
 
-	void clearall() {
-		for (int i = 0; i < MAX_CHAR; ++i) {
-			if (!children[i]) {
-				children[i]->clearall();
-				delete children[i];
-			}
-		}
+	while (hash[idx].header != 0){
+		idx = (idx + 1) % MAX_HASH;
 	}
-} TRIE;
+	
+	int header = ((str[0] - 'a' + 1)  << 5) + str[1] - 'a' + 1; // str always longer than 2
+	hash[idx].header = header;
+	hash[idx].name = name;
+	return idx;
+}
 
-TRIE *root = 0;
+int findHash (char *str){
+	int header = ((str[0] - 'a' + 1)  << 5) + str[1] - 'a' + 1; // str always longer than 2
+	ULL name = 0;
+	str = str + 2; // ignore first 2 char for header
+
+	for (; *str; ++str){
+		name = (name << 5) + *str - 'a' + 1;
+	}
+	int idx = name % MAX_HASH;
+	
+	while (hash[idx].header != 0){
+		if (hash[idx].header == header && hash[idx].name == name){
+			return idx;
+		}
+		idx = (idx + 1) % MAX_HASH;
+	}
+	return -1;
+}
 
 void init()
 {
-	if (!root) {
-		root->clearall();
+	for (RINT i = 0 ; i < MAX_HASH ; ++i){
+		hash[i] = ini;
 	}
-	root = new TRIE();
+	for (RINT i = 0 ; i < MAX_USER; ++i){
+		userCnt[i] = 0;
+	}
 }
 
 void addEvent(int uid, char ename[], int groupid)
 {
-	TRIE *node = root->add(ename);
-	node->events[groupid][node->eventsCnt[groupid]++] = uid;
+	int k = addHash(ename);
+	hash[k].uIDList[groupid][hash[k].uIDCnt[groupid]++] = uid;
+	userCnt[uid]++;
 }
 
 int deleteEvent(int uid, char ename[])
 {
-	return 0;
+	int k = findHash(ename);
+	int delCnt;
+	for (RINT i = 0 ; i < MAX_GROUP ; ++i){
+		if (hash[k].uIDCnt[i] > 0){
+			for (RINT j = 0 ; j < hash[k].uIDCnt[i]; ++j){
+				if (uid == hash[k].uIDList[j]){
+					if (j == 0){
+						delCnt += hash[k].uIDCnt[i];
+						hash[k].uIDCnt = 0;
+					}
+					else{
+						hash[k].uIDList[j] = hash[k].uIDList[--hash[k].uIDCnt[i]];
+						delCnt += 1;
+					}
+					break;
+				}
+			}
+		}
+	}
+	userCnt[uid] -= delCnt;
+	return delCnt;
 }
 
 int changeEvent(int uid, char ename[], char cname[])
 {
-	return 0;
+	int k = findHash(ename);
+	int delCnt;
+	for (RINT i = 0 ; i < MAX_GROUP ; ++i){
+		if (hash[k].uIDCnt[i] > 0){
+			for (RINT j = 0 ; j < hash[k].uIDCnt[i]; ++j){
+				if (uid == hash[k].uIDList[j]){
+					if (j == 0){
+						delCnt += hash[k].uIDCnt[i];
+						hash[k].uIDCnt = 0;
+					}
+					else{
+						hash[k].uIDList[j] = hash[k].uIDList[--hash[k].uIDCnt[i]];
+						delCnt += 1;
+					}
+					//delete and add
+					addEvent(uid, cname, i);
+					break;
+				}
+			}
+		}
+	}
+	userCnt[uid] -= delCnt;
+	return delCnt;
 }
 
 int getCount(int uid)
 {
-	return 0;
+	return userCnt[uid];
 }
+
 
 ```
