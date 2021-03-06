@@ -6,13 +6,11 @@ Trie 를 각각 갖고 있으면 메모리 낭비임.
 
 핵심 자료구조
 
-일정 이름으로 구성된 TRIE
-TRIE 의 말단 노드에 저장될 자료구조: group id (100) x user list (5), count
-
+Hash -> group 을 linked list 로 갖고 있음.각각의 group struct 는 user id list 를 갖고 있음. 
 각 user 가 어떤 group id 에 속하는지 배열 (10000) 의 링크드 리스트
 
 addEvent:
-해당 ename 으로 trie 탐색해서 group id 위치에 있는 user list 에 uid 추가 count ++
+해당 ename 으로 hash 를 탐색해서 group id 위치에 있는 user list 에 uid 추가 count ++
 (0번째 위치는 master 아니면 normal)
 
 deleteEvent:
