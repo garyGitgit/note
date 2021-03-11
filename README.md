@@ -86,49 +86,86 @@ int deleteEvent(int uid, char ename[])
 						hash[k].uIDCnt = 0;
 					}
 					else{
-						hash[k].uIDList[j] = hash[k].uIDList[--hash[k].uIDCnt[i]];
-						delCnt += 1;
-					}
-					break;
-				}
-			}
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+
+#include <stdio.h>
+
+extern void init(int N, int M);
+extern void befriend(int uid1, int uid2);
+extern void add(int pid, int area, int price);
+extern void reserve(int uid, int pid);
+extern int  recommend(int uid);
+
+#define INIT			100
+#define BEFRIEND		200
+#define ADD				300
+#define RESERVE			400
+#define RECOMMEND		500
+
+static bool run()
+{
+	int L, N, M;
+	bool okay = false;
+
+	int pid, uid;
+	int uid1, uid2;
+	int area, price;
+
+	int ans;
+	int cmd, ret;
+
+	scanf("%d", &L);
+
+	for (int l = 0; l < L; ++l)
+	{
+		scanf("%d", &cmd);
+		switch (cmd)
+		{
+		case INIT:
+			scanf("%d %d", &N, &M);
+			init(N, M);
+			okay = true;
+			break;
+		case BEFRIEND:
+			scanf("%d %d", &uid1, &uid2);
+			befriend(uid1, uid2);
+			break;
+		case ADD:
+			scanf("%d %d %d", &pid, &area, &price);
+			add(pid, area, price);
+			break;
+		case RESERVE:
+			scanf("%d %d", &uid, &pid);
+			reserve(uid, pid);
+			break;
+		case RECOMMEND:
+			scanf("%d %d", &uid, &ans);
+			ret = recommend(uid);
+			if (ret != ans)
+				okay = false;
+			break;
 		}
 	}
-	userCnt[uid] -= delCnt;
-	return delCnt;
+
+	return okay;
 }
 
-int changeEvent(int uid, char ename[], char cname[])
-{
-	int k = findHash(ename);
-	int delCnt;
-	for (RINT i = 0 ; i < MAX_GROUP ; ++i){
-		if (hash[k].uIDCnt[i] > 0){
-			for (RINT j = 0 ; j < hash[k].uIDCnt[i]; ++j){
-				if (uid == hash[k].uIDList[j]){
-					if (j == 0){
-						delCnt += hash[k].uIDCnt[i];
-						hash[k].uIDCnt = 0;
-					}
-					else{
-						hash[k].uIDList[j] = hash[k].uIDList[--hash[k].uIDCnt[i]];
-						delCnt += 1;
-					}
-					//delete and add
-					addEvent(uid, cname, i);
-					break;
-				}
-			}
-		}
+int main() {
+	int TC, MARK;
+
+	freopen("sample_input.txt", "r", stdin);
+
+	setbuf(stdout, NULL);
+	scanf("%d %d", &TC, &MARK);
+
+	for (int testcase = 1; testcase <= TC; ++testcase) {
+		int score = run() ? MARK : 0;
+		printf("#%d %d\n", testcase, score);
 	}
-	userCnt[uid] -= delCnt;
-	return delCnt;
-}
 
-int getCount(int uid)
-{
-	return userCnt[uid];
+	return 0;
 }
-
 
 ```
