@@ -1,171 +1,146 @@
 ```
+1) hash -> 도서 이름 (MAX unsigned long long), 도서 타입 (MAX 5, unsigned long long)
+2) section (MAX 100)
+3) 
 
 
-# define MAX_USER 1000
-# define MAX_GROUP 100
-# define ALPHABET 26
-# define MAX_EVENT 5
-# define MAX_HASH 40009
-# define RINT register int
-# define ULL unsigned long long
-
-typedef struct _hash {
-	int header;
-	ULL name;
-	int uIDList[MAX_GROUP][MAX_EVENT];
-	int uIDCnt [MAX_GROUP];
-} HASH;
-
-HASH hash[MAX_HASH], ini;
-int userCnt [MAX_USER];
-int addHash (char *str){
-	ULL name = 0;
-	str = str + 2; // ignore first 2 char for header
-
-	for (; *str; ++str){
-		name = (name << 5) + *str - 'a' + 1;
-	}
-	int idx = name % MAX_HASH;
-
-	while (hash[idx].header != 0){
-		idx = (idx + 1) % MAX_HASH;
-	}
-	
-	int header = ((str[0] - 'a' + 1)  << 5) + str[1] - 'a' + 1; // str always longer than 2
-	hash[idx].header = header;
-	hash[idx].name = name;
-	return idx;
+unsigned long long s2i (char bookName[]){
+    unsigned long long ret = 0;
+    for (; *bookName ; bookName++){
+        ret = (ret << 6 ) + ret - 'a + 1;
+    }
+    return ret;
 }
 
-int findHash (char *str){
-	int header = ((str[0] - 'a' + 1)  << 5) + str[1] - 'a' + 1; // str always longer than 2
-	ULL name = 0;
-	str = str + 2; // ignore first 2 char for header
 
-	for (; *str; ++str){
-		name = (name << 5) + *str - 'a' + 1;
-	}
-	int idx = name % MAX_HASH;
-	
-	while (hash[idx].header != 0){
-		if (hash[idx].header == header && hash[idx].name == name){
-			return idx;
-		}
-		idx = (idx + 1) % MAX_HASH;
-	}
-	return -1;
+
+typedef struct _type{
+    BOOK * types [500+1];
+    void add (int typeId, BOOK *book){
+        BOOK *head = types [typeId]->next;
+        head->prev->next = book;
+        book->prev = head-<prev;
+        book->next = head;
+        head->prev = book;
+    }
+} TYPE;
+
+TYPE type [500+1];
+
+typedef struct _book{
+    unsigned long long bookId;
+    int section;
+    int mTypes[5];
+    int mTypesCnt;
+    struct _book *prev, *next;
+} BOOK;
+
+BOOK *bookDict [100000];
+
+void addHash(BOOK *newBook){
+    unsigned long long hId = s2i(name);
+    int hId = hId % 100000;
+
+    while (bookDict[hId] != 0 ){}
+    bookDict[hId] = newBook;
 }
 
-void init()
-{
-	for (RINT i = 0 ; i < MAX_HASH ; ++i){
-		hash[i] = ini;
-	}
-	for (RINT i = 0 ; i < MAX_USER; ++i){
-		userCnt[i] = 0;
-	}
+BOOK *findHash(){
+}
+typedef struct _bookPool{
+    int cnt;
+    BOOK bookPool[100000 + 500 + 100];
+    BOOK *alloc (){
+        bookPool[cnt].section = 0;
+        bookPool[cnt].bookId = 0;
+        bookPool[cnt].mTypesCnt = 0;
+        bookPool[cnt].prev = bookPool[cnt].next = 0;
+        return &bookPool[cnt++];
+    }
+}BPOOL;
+BPOOL bookPool;
+
+
+
+typedef struct _section{
+    BOOK *sections[100 + 1];
+
+    void append(int sId, BOOK *ptr){
+        BOOK *head = *sections[sId]->next;
+        if (!head){
+            head->prev->next = ptr; //dummy->new
+            ptr->prev = head->prev; //new->dummy
+            ptr->next = head; // new->head
+            head->prev = ptr; // head->new      
+        }
+        else{
+            ptr->prev = *sections[sId];
+            *sections[sId]->next = ptr;
+        }
+    }
+
+    void create (int sId, char bookName[], int mTypes[], int mTypesCnt) {
+        unsigned long long bookId = s2i (bookName);
+        BOOK * newBook = bookPool.alloc();
+        newBook->bookId = bookId;
+        newBook->section = sId;
+        for (RINT i = 0 ; i < mTypesCnt; ++i){
+            newBook->mTypes[i] = mTypes[i];
+            type.types[mTypes[i]].add(newBook);
+        }
+        newBook->mTypesCnt = mTypesCnt;
+
+        BOOK *head = *sections[sId]->next;
+        if (!head){
+            head->prev->next = newBook; //dummy->new
+            newBook->prev = head->prev; //new->dummy
+            newBook->next = head; // new->head
+            head->prev = newBook; // head->new      
+        }
+        else{
+            newBook->prev = *sections[sId];
+            *sections[sId]->next = newBook;
+        }
+    }
+
+    void remove (int sId, BOOK *book){
+    }
+} SECTION;
+
+SECTION section;
+
+
+init
+
+bookPook.cnt = 0;
+for (RINT i = 1 ; i <= M; ++i){ 
+    sections[i] = bookPool.alloc(); //head 
 }
 
-void addEvent(int uid, char ename[], int groupid)
-{
-	int k = addHash(ename);
-	hash[k].uIDList[groupid][hash[k].uIDCnt[groupid]++] = uid;
-	userCnt[uid]++;
+for (RINT i = 0; i <= 500; ++i){
+    type.types[i] = bookPool.alloc(); // head
+}
+add: section 에 book 추가 (book 은 mTypes 를 타입으로 갖고 있음) 
+
+int _mTypes [5];
+for (RINT i = 0 ; i < mTypeNum ; ++ i){
+    _mTypes[i] = s2i (mTypes[i]);
+}
+section.create(sectionId, char bookName, _mTypes, mTypeNum);
+
+moveType: mType 을 가진 모든 책을 mfrom (section) 에서 mto (section) 로 이동
+
+int typeId = s2i(mType);
+BOOK *ptr = type.types[typeId];
+while(ptr){
+    sections.remove(sId, ptr);
+    sections.append(sId, ptr);
+    ptr = ptr->next;
 }
 
-int deleteEvent(int uid, char ename[])
-{
-	int k = findHash(ename);
-	int delCnt;
-	for (RINT i = 0 ; i < MAX_GROUP ; ++i){
-		if (hash[k].uIDCnt[i] > 0){
-			for (RINT j = 0 ; j < hash[k].uIDCnt[i]; ++j){
-				if (uid == hash[k].uIDList[j]){
-					if (j == 0){
-						delCnt += hash[k].uIDCnt[i];
-						hash[k].uIDCnt = 0;
-					}
-					else{
-#ifndef _CRT_SECURE_NO_WARNINGS
-#define _CRT_SECURE_NO_WARNINGS
-#endif
 
-#include <stdio.h>
-
-extern void init(int N, int M);
-extern void befriend(int uid1, int uid2);
-extern void add(int pid, int area, int price);
-extern void reserve(int uid, int pid);
-extern int  recommend(int uid);
-
-#define INIT			100
-#define BEFRIEND		200
-#define ADD				300
-#define RESERVE			400
-#define RECOMMEND		500
-
-static bool run()
-{
-	int L, N, M;
-	bool okay = false;
-
-	int pid, uid;
-	int uid1, uid2;
-	int area, price;
-
-	int ans;
-	int cmd, ret;
-
-	scanf("%d", &L);
-
-	for (int l = 0; l < L; ++l)
-	{
-		scanf("%d", &cmd);
-		switch (cmd)
-		{
-		case INIT:
-			scanf("%d %d", &N, &M);
-			init(N, M);
-			okay = true;
-			break;
-		case BEFRIEND:
-			scanf("%d %d", &uid1, &uid2);
-			befriend(uid1, uid2);
-			break;
-		case ADD:
-			scanf("%d %d %d", &pid, &area, &price);
-			add(pid, area, price);
-			break;
-		case RESERVE:
-			scanf("%d %d", &uid, &pid);
-			reserve(uid, pid);
-			break;
-		case RECOMMEND:
-			scanf("%d %d", &uid, &ans);
-			ret = recommend(uid);
-			if (ret != ans)
-				okay = false;
-			break;
-		}
-	}
-
-	return okay;
-}
-
-int main() {
-	int TC, MARK;
-
-	freopen("sample_input.txt", "r", stdin);
-
-	setbuf(stdout, NULL);
-	scanf("%d %d", &TC, &MARK);
-
-	for (int testcase = 1; testcase <= TC; ++testcase) {
-		int score = run() ? MARK : 0;
-		printf("#%d %d\n", testcase, score);
-	}
-
-	return 0;
-}
+moveName: mName 을 가진 책을 mSection 으로 이동 
+deleteName mName 을 가진 책을 제거
+countBook: mSection 에서 mType 을 하나라도 갖고 있으면 그 책들을 counting 해서 반환
 
 ```
