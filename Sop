@@ -1,0 +1,30 @@
+연구 동기 & 개인적인 경험
+
+왜 너가 지원했을까?
+
+
+My grandfather died of cancer, and my father has gout and high blood pressure. Both of them were reluctant to go to the hospital, and by the time they had severe symptoms, it was already too late to get recovered. What if unobtrusive and pervasive methods had been developed to recognize the signs of their health anomalies earlier? As they don’t exist, do my family and my friends have to wait until their health gets worse like my grandfather and father? For this reason, I am convinced that I have to do extensive research on how to use computational techniques to improve human well being for my family and my friends. In this sense, I adamantly believe that studying at Georgia Tech would allow me to achieve my life’s purpose. Specifically, Dr. Thomas Ploetz and Dr. Munmun De Choudhury are the most suitable professors for my future research.  (148)
+
+
+
+연구 및 실무 경험
+
+어떤 strong background 를 갖고 있는지 궁금해 
+
+
+I have prepared academically and professionally for graduate school. As an undergraduate researcher under the guidance of Dr. Ahyoung Choi, I researched human computer interaction and human activity recognition based on wearable devices. It was not easy to write papers and prepare for conferences while studying my major, but research was very rewarding when I saw people who benefited from my project. For example, in my first research, I interviewed the elderly to measure the usability of speech recognition based 3D interfaces on smartphones. I felt a great sense of reward when they told me the new interface really helped them interact with smartphones.
+
+
+At Samsung Electronics, I learned machine learning techniques with various structures of data and built the server system for engineers in the company. I was involved in machine learning projects with a huge amount of structured and unstructured data. For example, in the first year, I applied a reinforcement learning model to manage chip emulation resources. As there were few references on the project, the project seemed to be unsuccessful. However I didn't give up and looked up references from other domains, such as networking. Fortunately, I came up with reinforcement learning and published the paper, Dynamic Resource Management System in Soc Emulation'', at the top conference. Moreover, in recognition of the company's cost reduction, I received the Best Paper Awards from my company. Nowadays, I am working on another project, a clustering model based on components from simulation logs.
+
+
+In addition, I built a server system for managing big data and deploying machine learning models. Before my project, my team struggled with impractical use of machine learning and handling big data with different kinds of databases. To solve these challenges, I proposed the efficient and scalable system with automated pipelines with in-memory machine learning and software techniques such as Singleton design pattern and Object Relational Mapping. Specifically, automated pipelines enabled conveninet model update and deploy with in-memory machine learning that sped up model inference time 40 times faster.
+
+
+and memory space was remarkably saved by using Singleton design pattern regardless of the number of threads. 
+
+
+During this period, I have prepared for my Ph.D life in the US by making money and experiencing the industry. Even if the domain is hardware, what I have done matches with my goal to improve human well being with computational techniques. Based on big data, I have improved how the engineers work without any human interventions ()
+
+
+
