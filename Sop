@@ -1,14 +1,81 @@
 ```
-When I was an undergraduate research assistant, I developed a multi-user table tennis scoring system using commodity wearable devices and smartphones. This system was a novel approach in that it didn’t require any third-party entity to receive data from both players. The score was automatically calculated by integrating multimodal signals, including accelerometer sensor, gravity sensor and audio signals, on each device and the devices were aware of the context of the game by passing messages to each other through WiFi-Direct. I was fascinated by a new value created by interaction of mobile devices, and it gave me a strong motivation to do in-depth research in context-aware computing based on mobile devices. Strong backgrounds of electronic engineering and mobile computing of the University of Texas at Austin is the main reason why I applied for Electrical and Computing Engineering Ph.D. program.
+목적: 사람의 human well being 을 위해서 사람의 다양한 행동의 문맥적 상황을 인식하는 AI 에 대한 연구
 
-In my doctoral program, I would like to study cooperative mobile computing and online learning on mobile devices for context-awareness. From my academic and professional experiences, due to privacy issues, I have experienced many limitations to collect and utilize data in central servers. Moreover, even if machine learning has its potential, there have been many limitations for trained models to be sustainable in a continuous data stream. My research goal is to build privacy preserving and cooperative mobile systems and to research sustainable machine learning in a continuous data stream. In the University of Texas at Austin, Dr. Edison Thomaz and Dr. Christine Jullie are the most suitable professors for my goal. Dr. Edison Thomaz’s research on active learning with wearable devices is the best research fit for me in the aspect of continual machine learning on mobile devices. Dr. Christine Jullie’s research on federating learning is also the best research for me in the aspect of cooperative computing on mobile devices. 
+동기: single user 의 행동 인식에 대한 연구는 많이 진행되어 왔고, 이를 통해 사람들의 health 에 영향을 많이 주고 있다. (ex, step 측정 등) . 하지만, multi user 의 행동 인식 연구에는 진행이 더디다. 숲을 봐야 나무를 이해할 수 있듯이, Multi user 에 대한 전체적인 행동 인식이 선행되어야 개인에 대한 행동에 대해서 더 다각도에서 이해할 수 있음. 
 
-I have prepared academically and professionally for graduate school. As an undergraduate researcher under the guidance of Dr. Ahyoung Choi, I researched multi-user activity recognition based on wearable devices and developed real-time monitoring systems for human signals. My research on multi-user activity recognition – specifically multi-user table tennis scoring system – helped me to enhance problem solving skills with understanding of wireless network and message passing architecture. A big challenge of the research was how the system could be designed without any third-party entity and Internet network. I proposed synchronized message passing architecture on mobile devices with WiFi -Direct. This architecture improved the usability of the system in case of no Internet and no additional devices to collect data and process algorithms. I published multiple papers and applied for a patent related to this research.   
-My project about real-time systems for human signals improved my basic engineering skills related to building backend systems with Transmission Control Protocol servers, web servers and databases. For example, I was involved in the project of an unobtrusive tele-monitoring system for sleep and respiration. I developed TCP servers and databases for 1 kHz data from sensors and placed queues for data buffering. The web servers took and displayed sensor data from buffers in real time. I kept working on this project even after I graduated my university and got a job, and this shows my passion and responsibility for my research. The project was published in a journal, IEEE Access.
+부수적인 동기: sensor 의 개수와 종류는 급격하게 증가하고 있고, sensors show significant potential to support HAR by capturing useful low-level features such as human motion, physiological signals, environmental parameters. 
 
-In Samsung Electronics, I was involved in multiple projects related to machine learning for various structures of big data. In the first year, I analyzed time series data and developed a reinforcement learning model to manage emulation resources for digital design. As there were few references on the project, the project seemed to be unsuccessful. However, I didn't give up and looked up references from other domains. Fortunately, I found application of reinforcement learning on adaptive congestion control in the network domain and developed a Double Deep Q Network model. As a result, the proposed model increased resource utilization by 20%. In recognition of the company's cost reduction and publishing paper at the top conference, I received the Best Paper Award from my company. Nowadays, I develop a prioritization algorithm based on clustering terabytes of log data from digital design simulation.
-I have also built distributed machine learning pipelines for a continuous data stream. Before my project, my team struggled with high latency of model inference time and tedious tasks for machine learning development and deployment. To solve these challenges, I proposed an efficient and scalable system with in-memory machine learning models and pipeline automation. This architecture decreased model inference time from 40 seconds to 1 second on average and reduced the number of tedious machine learning development and deployment steps by 80%.
+배경
+Multi activity 의 카테고리
+	1. Group activity: same task 를 달성하기 위해서 collaboration 을 한다 (예를 들면 무거운 물건을 옮김) 
+	2. Multi individual activity: 같은 공간에서 다른 활동을 한다 (예를 들면 한 명은 책을 읽고 한 명은 노래를 듣는다)
+	3. Hybrid activity: group activity + multi individual activity (한 무리의 사람들은 요리를 하고 한 무리의 사람들은 TV 를 시청) 
++ 여기에 추가적으로 Competition activity 가 있음. 여러 사람이 same task 를 달성하기 위해 경쟁적으로 행동 (예를 들면 탁구) 
 
-After my PhD, I will become a professor in the university where I studied. It was a place where I had a lot of good experience and expertise under the guidance of great professors when I knew nothing about Computer Science. I want to go back there and be a good advisor and researcher like the professors. Furthermore, I would like to make a leading laboratory in South Korea by conducting research on ubiquitous computing, which has not been actively researched in my country.
+Multi activity 의 분류
+	- Simultaneous : eating together 
+	- Collaborative : same goal, different sub task (ex. Cooking meal, housekeeping) 
+	- Concurrent : eating while another subject is watching TV 
+	- Conflicting : one toilet another shower 
+	
+Application domain
+	- Surveillance and security : 현재 연구는 acoustic 과 image 를 결합
+	- Assisted living : IoT devices work together to promote their collaboration convenience, luxury entertainment, privacy and security 
+	- Tracking and localization 
+	- Group detection, membership, affiliation
+	- Sports activity recognition 
+	
+	
+	
+
+문제 예시: 
+
+연구 주제: 
+
+적은 리소스로 적은 데이터를 갖고 학습과 추론을 할 수 있나? (on-device learning) 
+	- Transfer learning
+	- Active learning
+	- Few shot learning
+	
+분산해서 학습과 추론을 할 수 있나? (decentralized learning) 
+	- Distributed learning (data parallelism)
+	- Federated learning (weight upload, model download) 
+	- Hierarchical learning (layer parallelism) 
+	
+다른 모달의 데이터로 학습과 추론을 할 수 있나 (multimodal learning)
+	- Multimodal learning 
+		○ Multimodal representation 
+		
+	키워드: group recognition, data fusion, collaboration, sensor fusion method
+	
+
+Undergraduate Research Assistant
+
+
+IoT Startup
+	- BLE 를 활용한 Human Proximity Recognition : radio-based method 중 하나인 RSSI (Received Signal Strength Index)  를 활용한 사람간 proximity 를 계산해서 contextual information 을 infer 할 수 있음. 
+	- RSSI 는 기본적으로 low accuracy in fine-grained localization 이 어려움. 그리고 direction 에 상관없이 amplitude information 을 함.
+	- 따라서 short distance 에 유용한 정보가 됨. 
+	
+	
+Samsung Electronics
+	- Hierarchical model
+	
+	
+Cooperative learning on heterogeneous devices 
+
+(나의 research goal) 삼성에서 개발하고 있는 미래의 chip 은 nano 공정으로 더 소형화되고, 더 저전력으로 수행되고, 더 다양한 형태의 design 이 들어가고 더 다양한 기능을 하는 digital design 이 들어감, even in wearable devices !  결과적으로 더 작고 powerful 한 chip임. 이것이 나에게 의미하는 바는 이들이 단순히 sensing 을 하는 것이 아니라 하나의 뇌를 가지는 entity 가 될 것이라고 생각했고, 이 작은 모바일 기기들과 AI 가 결합하여 만들어나갈 무궁무진한 가능성에 매료되었다. (오슈아 말 인용) 나는 AI 가 나아가야 할 방향이 거대한 all-around 가 아니라 하나의 특화된 기능을 가진 AI 들이 서로 협력을 해나가는 것이라고 생각한다. 
+
+구체적으로 나는 다음의 다음의 3가지 연구에 관심이 있다. 첫 번째로, from monolithic AI to decentralized AI 이다. 내가 삼성에서 일할 때 다양한 ML 모델들을 deploy 했는데 이들은 크기도 크고 메모리에 상주 해야해서 관리도 어려웠고, 이를 해결하기 위해 분산된 환경에서 hierarchical 한 model 로 변형시켜 분산하여 저장한 경험이 있다. 이를 확장하여 모바일 기기에서도 사용 가능한 decentralized AI 를 연구하고 싶다. 두 번째로, on-device learning with less data and less resources 에 관심이 있다. 회사에서 chip design 의 버그를 찾아내기 위한 클러스터링 연구를 했을 때, sparse 한 버그 history 중에서 다른 데이터보다 의미있는 그 버그에 대한 가중치를 높게 줌으로써 알고리즘의 정확도를 높였다. 이처럼 on-device learning 에서도 sparse 할지라도 학습에 정말 필요한 데이터를 통해 학습하여, 최소한의 데이터와 리소스를 활용하는 방법에 대해 연구하고 싶다. 마지막으로 multimodal 데이터의 학습에 관심이 있다. RA 때 했던 연구 중에 acoustic data 와 accelerometer 와 gravity sensor 의 multimodal 데이터를 활용했는데, unimodal 에서 국한 되었던 single activity recogntiion 을 multimodal 을 통해서 multi activity recogntion 으로 확장시켰다. 사람의 행동에 대한 다양한 contexual understanding 에 multimodal 은 필수적이라고 느꼈다. 나는 graduate school 에서 이러한 연구를 하기 위해 indsutry 와 academia 에서 많은 경험을 쌓아왔다.
+
+Bicycle IoT 스타트업에서의 초기 멤버로서의 경험은 나의 IoT 기기를 다루는 프로그래밍 실력을 향상시켜줬다. 나는 radio-based method - RSSI (Received Signal Strength Index)  - 에 Kalman filter 를 적용하여 사람과 기기간 proximity 를 계산하는 펌웨어 알고리즘을 개발했다. 게다가  lead software engineer 로서 BLE 기반의 안드로이드 앱을 from scratch 부터 production level 까지 개발하여 기기를 모니터링하고 컨트롤 할 수 있도록 했다. 이 기술을 통해서 contactless 하게 bicycle lock 을 제어할 수 있는 우리의 목표를 달성할 수 있었다. Day and night 으로 심지어는 학교와 병행하면서 일하는 것이 정말 힘들었지만, academia 적 지식과 industry 에서의 expereince가  collaborate 하는 즐거움을 알았다. 예를 들어 wireless network 에서의 이론적인 master slave 를 내가 BLE 에서 직접 제어함으로써 이해의 폭이 넓어졌고 (구체적이었으면 좋겠음), 이러한  두 분야에서 collaboration 은 beginner 였던 나를 퀀텀 점프할 수 있는 계기가 되었다 . 열심히 일한 덕분에 우리 팀은 한국 정부의 지원을 받아 세계적인 IT 전시회인  MWC 에서 전시할 수 있었다. 
+
+
+Academia 에서 최아영 교수님이 나에게 research 에 대한 기본적인 skill 과 방법들을 가르쳐주셨다. 나는 several projects including wearable computing. 차세대 IoT  기기 그리고 HCI 를 통해서 어떻게 분석적이고, 비판적이고, 창의적으로 생각하는 방법을 배웠고, SCI 저널과 international & domestic conference에 publish 를 하면서 연구자로써의 첫 걸음을 디뎠다. 더 나아가 기본적인 signal processing skill 을 배웠는데 이는 weaeralble device 에서 나온 accelerometer 나 gravity sensor 등을 filtering 하고 amplifying 하였고, 이를 통해서 sliding widnow 를 통해 gesture feature detection 하는 알고리즘을 개발했다. 이 알고리즘를 mobile 환경에서 computing 되도록 하여 acoustic 한 데이터와 통합하고, 이 두 가지의 multimodal 데이터를 통해 multiuser acitivity recognition 을 통해 table tennis 경기의 score 를 자동으로 계산하는 시스템을 개발했다. 이 시스템의 novel 한 부분은 central server 없이 단지 mobile device 간 message passing architecture 에 기반하여 cooperative 하게 상호작용하면서 multi user 의 context 를 이해한다는 것이었다. 나의 이러한 research 경험이 분명히 AI 분야에서도 cooperative AI 에 기여를 할 것이라고 생각한다 
+
+
+
+
+ 
 
 ```
