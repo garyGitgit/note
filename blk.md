@@ -271,6 +271,11 @@ Reference: https://namu.wiki/w/Pi%20Network
 	- 브레이브 콩즈 이야기, 메타토이드래곤즈에서 런칭한 두 번째 프로젝트 (메타토이게이머즈 - 게임 쪽으로 나가겠구나) 
 ![image](https://user-images.githubusercontent.com/16892436/159156389-bdab1779-e48e-43c1-a4b8-c2ceac5fb255.png)
 
+
+
+5. Theta 진행상황
+	- Theta 에서 진행하는 프로젝트들, documentation 이 나왔는데 어떤 내용인지 간략하게 정리
+
 ```
 ```
 one klay bookstore
