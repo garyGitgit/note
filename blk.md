@@ -164,3 +164,57 @@ Layer in blk
 
 Blk : cryptography (public key, private key), game theory (mathematical models of strategic interaction among rational decision-makers), distributed systems (RPC, BFT), economy (tokenomix) 
 ```
+
+
+```
+hackmd structure
+
+스터디 카테고리
+
+	1. 스터디 내용
+		a. Phase 0: 블록체인 개발에 참여하는 방법 - 크게 보면 총 4가지 + a 측면에서 볼 수 있고, 각각이 어떤 역할을 하는지 알아보자 
+		b. Phase 1
+		c. Phase 2
+		d. Phase 3
+
+	1. Defi 
+		a. Defi 1.0
+			i. Luna - Anchor
+		b. Defi 2.0
+			i. Olympus Dao 
+			ii. Curve
+	2. 보안
+		a. 이더리움의 보안
+			i. 
+		b. 솔라나의 보안
+			i. 솔라나 보안 이슈 터진 뉴스 공유
+	3. 기술
+		a. Layer 2 네트워크의 기술적인 이야기
+		b. Eth 나 Klay 와 같은 on-chain 상에서 랜덤이 어려운 이유 (간단함. On-chain 에는 seed 값이 나오기 때문에 예측 가능하다. 따라서 off-chain 에서 seed 를 주고 random함수를 가져오는 형태로 수행한다) 
+		c. 보안
+			i. 이더리움의 보안: 비탈릭 부테린의 보안에 대한 레딧 글 정리
+			ii. 솔라나의 보안: 웜홀 이슈 
+	4. NFT
+		a. 재밌는 NFT 소개
+			i. 메타콩즈
+			ii. 메타토이 드래곤즈
+			iii. 갈라
+			iv. 스텝엔
+			v. 클레이 엠퍼
+	5. 토의사항
+		a. 다단계와 NFT 시장: pros and cons
+		b. NFT 의 미래: 문제 상황 발생과 문제 발생시 대응 내용
+		c. 왜 블록체인일까에 대한 견해
+	6. 유용한 사이트들과 그 목적 (언제 쓰면 좋을지) 
+	7. 최신 뉴스
+		a. Times 에 올라온 
+	8. 어쩌구 저쩌구 잡단한 히스토리 기록: 예를 들어 Klaymfer 구입 및 특정 NFT 구입 등 적어도 되고 안 적어도 되고 마음대로~
+		
+		
+기술적으로 구현할 부분
+	- Github master branch 에 push 가 되면 (즉, 글이 업데이트가 되면) 이메일이 날아오도록 설정하자
+![image](https://user-images.githubusercontent.com/16892436/159154259-5e9c4286-0650-474a-b8b5-6f6522774b58.png)
+
+
+
+```
