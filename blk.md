@@ -264,12 +264,30 @@ Reference: https://namu.wiki/w/Pi%20Network
 
 4. 파생 상품 (전체 TVL 이 증가하는 것은 의미가 없을 수 있다. 마치 서브프라임 모기지 사태의 파생상품 처럼) 과 다단계 경제의 함정 (올림푸스 다오를 통한 고민) 
 
+Reference: https://every.to/napkin-math/nft-projects-are-just-mlms-for-tech-elites 
+다단계 (pyramid/ponzi/MLM scheme) 
+Multi-level-marketing companies (MLM) : 다단계 회사
+작가는 BAYC 같은 것은 전형적인 MLM 이라고 함. 전형적인 MLM 의 모습은 consumer 를 retailer로 변화시킴. 그래서 Consumer 들은 X 개의 제품을 도매로 사고 이를 친구나 이웃들에게 판매한다. 따라서 이러한 MLM 은 2가지의 경로로 발전한다
+	1) 기존 local distributor 에게 better product, better marketing support 를 제공함으로써 더 많은 제품을 팔게 함.
+	2) 추가적인 distributor 를 고용한다.
+
+비즈니스를 성장시킬 수 있는 가장 저렴하고 빠른 옵션은 2번째 옵션임. MLM 의 인센티브 기반의 채용 방식은 새로운 distributor 를 고용하면 그에 대한 보상을 갖게 된다. 그 사람이 버는 돈의 N % 를 지급하는 등. (잠깐 상우의 이야기 - 이건 소비자를 끌어오는 최근 IT 기업의 전형적인 방식이다. 즉, 친구를 초대하면 1만원 쿠폰을 주는 형식. 또는 회사의 신규 인력을 고용할 때, 친구 데려오면 얼마 준다 와 같은 형식). 이 작가도 말하기를 real-estate business 또한 이러한 방식으로 동작을 한다. Keller Williams (기업) 가 이 분야의 선구자였는데 real estate agent 가 다른 agent 를 데려오면 추가 인센티브를 주는 방식이다. 그렇기 때문에 MLM 을 규제하기 정말 어렵다고 한다.
+
+여담으로 Keller Williams 사에 대해서 좀 더 알아봤다. 이런 히스토리가 있었다 
+In the mid-1980s, the company suffered from the United States housing bubble and began to offer profit sharing to existing and potential associates in order to retain agents and help get through the recession (중략)  
+Keller Williams expanded at a rapid rate throughout the United States, much of which was attributed to its commission split for agents.
+ (wiki)
+
+재밌는게 2017년에는 부동산에서 tech company 로 변환했고, Kelle 라는 AI app 을 런칭했다 (real estate 를 위한 virtual assistant) 
+
+
 기타 궁금한 내용
 	- 스터디 이름 (가칭. DCC / 픽셀 아트로 우리를 대표할 수 있는 이미지가 있으면 재밌겠다)
 	- 스텝엔 진행 상황
 	- Klaymfer 참여 이야기 (2개 매수)
 	- 브레이브 콩즈 이야기, 메타토이드래곤즈에서 런칭한 두 번째 프로젝트 (메타토이게이머즈 - 게임 쪽으로 나가겠구나) 
 ![image](https://user-images.githubusercontent.com/16892436/159156389-bdab1779-e48e-43c1-a4b8-c2ceac5fb255.png)
+
 
 
 
