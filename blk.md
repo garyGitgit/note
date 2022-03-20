@@ -223,7 +223,35 @@ hackmd structure
 20220323 스터디 주제
 
 1. Pi Network 에 대한 이야기. Pi Network 는 Legit 인가 Scam 인가에 대한 의견
-기사 읽어보기
+기사 읽어보기 
+
+Reference: https://investotrend.com/picoin-pi-is-it-a-scam/
+파이코익의 수익 창출원: 
+The mining app tracks your data and then sells it to advertisers. It also displays advertisements on the app for extra profit. 
+
+오해하기 좋은 점과 문제점
+	1. 각 edge node 들이 Hash power 를 제공하는 것이 아님
+	2. Decentralized 도 아님. 즉, 블록체인이 아니라 한 회사의 서버에 저장되고 있음
+	3. 블록체인의 코드도 오픈소스가 아님. 그래서 total supply 가 공개되어있지 않음. -> coin 이라고 이야기할 수 있을까 라는 저자의 생각
+
+기타 정보들
+	- Standford 에서 phd 과정밟고 있는 사람들이 2017년 만들었음. 
+	- 2900만의 다운로드 수 
+	- 2022년 하반기에 메인넷을 런치할 예정
+	- Max coin supply 는 100 billion coins 임. 혹자는 2년 동안 채굴했는데 2000 코인 얻었다고함. 즉, 더 많은 코인이 공급될 수 있다는 말 (max 에 한참 못 미침) 
+	- 작가의 생각은 얼만큼의 가치가 있는지 모르는 코인을 받으면서 자신의 mobile app tracking data 를 넘기는 것이 좋은 비즈니스 인가 우려된다고 함. 
+	
+Reference: https://minepi.com/white-paper
+Pi network white paper
+
+Reference: https://namu.wiki/w/Pi%20Network 
+블러드코인 (scam) 이랑 비슷한 테크를 타고 있다? 
+파이코인의 핵심 개발자 중 한 명인 니콜라스가 먹튀사기 및 페이스북 사칭 혐의로 법적 소송
+거래소에서 상장되지 않은 코인임에도 불구하고 KYC 를 통해 신분증, 여권 정보 등 정보를 수집
+
+그 어떤 암호화폐도 거래소 대신 자신들이 직접 KYC 를 통해 채굴자 정보를 수집하는 경우는 없다. 하지만 파이코인은 거래소에 상장되지 않았음에도 불구하고 대행사를 통해 KYC 인증을 한다 (KYC 인증이란? Know Your Customer Rule: 고객 확인 제도 - 신원 확인). 이런 민감한 개인 정보를 다 가져감에도 불구하고 투명하게 개인정보이용 내역 등을 공개하지 않고 있다)
+
+
 
 2. Hackmd 에 정리한 크립토 관련 내용 및 스터디 내용 공유
 * 참고로 지금 스터디 내용을 시간 순으로 정리하면 나중에 찾아보기 힘들테니 분류를 해서 저장을 하자 
