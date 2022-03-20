@@ -244,3 +244,108 @@ hackmd structure
 ![image](https://user-images.githubusercontent.com/16892436/159156389-bdab1779-e48e-43c1-a4b8-c2ceac5fb255.png)
 
 ```
+```
+one klay bookstore
+One Klay Bookstore (OKB) 
+
+목적: 
+누구나 책을 발행하고 누구나 잘 정리된 고급 정보를 얻고 그리고 후원하고 소득을 분배받는다, 그리고 거버넌스에 참여한다
+
+책을 무단으로 복사하거나 캡처하거나 하는 등의 작업은 못하도록 방지한다
+오히려 출처를 명시함으로써 거기에 대한 보상을 주는 방식으로 확실한 출처 표기를 하도록 한다 
+
+
+Smart contract 종류
+	1) Mint governance NFT
+		a. Send token from buyer to developer (send token)
+		b. Send NFT from developer to buyer (send nft ->실제로 넘어가는 것은 string 일까? Nft url --> 그러면 실제 이미지는 어디에 저장되나 ? IPFS?, 아직 JPG 를 저장하는 기술은 안나왔을라나? 그리고 그걸 저장하는게 또 어떤 의미가 있으려나?) 
+			i. NFT 의 구성 요소 (https://docs.ipfs.io/how-to/mint-nfts-with-ipfs/#a-short-introduction-to-nfts)
+				1) Unique id (<-> fungible token, ex. ETH) 
+				2) Smart contract 외부에 있는 데이터 (off-chain) 와 연결할 수 있음. 즉, 거대한 용량의 데이터를 smart contract 에 저장하는 것은 엄청나게 비싼 비용을 수반함
+			ii. IPFS 가 하는 역할
+				1) 기존의 HTTP 가 갖고 있는 기술적인 한계
+					a) 서버에서 이미지를 갖고 오는 경우, 그 이미지가 민팅했던 그 이미지였다고 하는 보장이 없음. 한 예로, 민팅한 후 이미지를 바꿔버린 러그풀 사례가 있음
+				2) 이를 해결하기 위해서 HTTP 기반이 아니라 content addressing 을 사용함. Content addressing 이란 CID (Content ID) 를 부여하고, 이 ID 에 기반하여 link를 전달하게 된다. 링크가 변경되었다는 것은 content 가 변경되었다는 것이랑 같은 의미이기 때문에 바로 데이터의 진위여부를 파악할 수 있다는 장점이 있다. 
+				3) 네트워크 상 
+	2) Publish books (round 1, round 2 …, round K)
+		a. Send token from author to treasury pool
+		b. Send books from develop to author
+		c. Distribute treasury pool (N %) to governance users (monthly)
+	3) Buy a book 
+		a. Send token from buyer to author
+		b. Send book from author to buyer
+	4) Publish author book NFT
+		a. Send token from author to developer
+		b. Send NFT from author to developer
+	5) Mint Author / Book NFT governance token
+		a. Send token from buyer to author
+		b. Send NFT from author to buyer
+		c. 
+
+```
+
+```
+논스 클래식 강좌 내용
+
+Curve
+
+전체 TVL 수치는 폭발적으로 증가하는데 그 수치를 믿을 수 있느냐에 대한 이야기
+예를 들어 A <- B <- C <- D <- F 이렇게 추정을 한다고 하면, 각각 TVL 을 하는데 실제가치는 1인 반면 5의 가치를 넘어버릴 수 있다고 함. 
+![image](https://user-images.githubusercontent.com/16892436/159156422-e4dc9592-8a03-4c1f-9f9b-f332cb36d6bd.png)
+
+
+Olympus Dao
+올림푸스 다오를 통한 Defi 2.0 에 대해서 (논스 클래식) : 경제 공학적인 메커니즘 (논스클래식) 
+
+거래소 프로토콜과 외부 유동성에 따라서 유동성 제공
+외부가 아닌 프로젝트 유동성을 스스로 공급
+	- 옴 토큰을 스테이킹을 하고 스테이킹하면 큰 혜택을 받을 수 있도록 구조를 설계 
+	
+채권을 발행
+	- 올림푸스 다오에서 채권은, 옴 토큰 보다 더 저렴한 가격으로 매수 할 수 있도록 함 (선물같은 개념) 
+	
+옴토큰이 하는 일
+	- 거래하는 용도는 아니고, 기존의 여러 자산을 묶어서 가치를 기반으로 교환이 되는 새로운 자산
+	- 스테이블 코인의 경우 화폐의 가치가 변하면 그대로 따라간다는 단점이 있음.
+	- 달러페깅은 연준의 양적완화 정책에 따라서 가치가 떨어지지 않나? 이러한 문제점에 기반해서 옴 토큰이 발생하게 됨.
+	- 왜 그러면 채권? 연준처럼 채권 발행 (미국이라는 건실한 신용을 기반으로 발행하는 것) --> 올림푸스다오도 채권을 비슷한 방식으로 발행한 것. 그렇다면 올림푸스의 신용은 무엇일까? 
+	- 올림푸스 다오는 채권을 판매해서 얻은 수익으로 옴을 더 발행한다. 즉 1 옴을 100DAI 에 판매를 했다고 했을 때, 1달러 = 1옴이라는 지지가격이 있을 때, 지지가격이 지켜지기 때문에 100 옴을 발행한다. 새로 발행한 옴을 스테이킹하고 있는 사용자에게 약 90% 이상을 수익으로 돌려준다. 
+	- 진짜 돈은 treasury 에 넣고 (금), 추가 발행한 토큰을 수익을 배분한다 (이것이 APY 가 압도적으로 높은 이유
+	- 자동으로 스테이킹을 함 (지갑에 다시 넣어주기) 
+	
+(3,3) 한 때 유행했던 용어 - 죄수의 딜레마
+
+	
+큰 특성
+	- Treasury
+	- 채권
+	- Rebase (복리효과 이자)
+	- Game theory (3.3)
+	
+
+![image](https://user-images.githubusercontent.com/16892436/159156428-759c731b-2b07-4504-b9bc-afa43ba13cae.png)
+
+```
+
+```
+유용한 사이트 (정보 얻을만한 사이트)
+
+
+정보를 얻을만한 사이트
+
+국내
+
+논스클래식 - 코인 & 최근 nft 소식
+코인버펫 - 최근 nft 소식
+메타 nft ? - 최근 nft 소식
+김단테 - steve lee
+알고란 - ? 
+
+
+
+해외
+Crypto univ? 
+
+![image](https://user-images.githubusercontent.com/16892436/159156503-73127a8a-ac4b-4104-b905-22d7149b1b99.png)
+
+```
