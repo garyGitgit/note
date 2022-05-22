@@ -329,7 +329,7 @@ def isConnected(w3):
 ```
 
 ###### sec.py
-```
+```python
 import sys
 import socket
 import glob
@@ -759,7 +759,7 @@ def showBlock(client):
 ```
 
 ###### compile.pyppp
-```
+```python
 # built-in libraries
 import os
 import sys
@@ -885,7 +885,7 @@ if __name__ == "__main__":
 ```
 
 ###### run.py
-```
+```python
 # built-in libraries
 import os
 import sys
