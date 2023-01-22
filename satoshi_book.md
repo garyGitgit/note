@@ -68,6 +68,11 @@ There s no need for reporting of proof of double spending like that. If the same
 We are not 'on the lookout' for double spends to sound the alarm and catch the cheater. We merely adjudicate which one of the spends is valid. 
 Recievers of transactions must wait a few blocks to make sure that resolution has had time to complete. 
 
+Most instant-access products aren't going to have a huge incentive to steal. If a merchant actually has a problem with theft, they can make the customer wait 2 minutes, or wait for something in e-mail, which many already do. 
+
+Inventory-request-data scheme: The neighbors request the items they don't have yet. If the item never comes through after a timeout, they request it from another neighbors that had it. 
+
+By James A. Dornald: You have an outline and proposal for such a design, which is a big step forward, but the devil is in the little details. 
 
 
 
