@@ -64,6 +64,9 @@ Broadcasts will probably be almost completely reliable. TCP transmissions are ra
 비트코인은 사회적으로 유용하고 가치가 있고 노드 운영자들은 그들이 선의의 기여를 할 것으로 생각이 든다
 In this case, it seems to me that simple altruism can suffice to keep the network running properly. It is very attractive to the libertarian viewpoint if we can explain it properly. I'm better with code than with words though.
 
+There s no need for reporting of proof of double spending like that. If the same chain contains both spends, then the block is invalid and rejected. (...)
+We are not 'on the lookout' for double spends to sound the alarm and catch the cheater. We merely adjudicate which one of the spends is valid. 
+Recievers of transactions must wait a few blocks to make sure that resolution has had time to complete. 
 
 
 
