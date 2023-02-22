@@ -72,7 +72,10 @@ Pedersen commitment 는 confidential trasnaction 기술로 commiment 와 opening
 
 [네컷글] onion address 는 무엇일까
 
-onion address 는 onion routing 을 사용하는 주소를 의미한다. 이를 이해하기 위해서는 Tor network 를 이해해야 한다. 사용자가 체감할 수 있는 Tor network 는 Tor 브라우저를 통해서 체감할 수 있는데 크롬이나 파이어폭스와 같은 특정 기업에서 이용하는 브라우저와  다르게 Tor 브라우저는 peer-to-peer network 로 운영되는 브라우저이다.
+onion address 는 onion routing 을 사용하는 주소를 의미한다. 이를 이해하기 위해서는 Tor network 를 이해해야 한다. 사용자가 체감할 수 있는 Tor network 는 Tor 브라우저를 통해서 체감할 수 있는데 크롬이나 파이어폭스와 같은 특정 기업에서 이용하는 브라우저와  다르게 Tor 브라우저는 peer-to-peer network 로 운영되는 브라우저이다. 또한, 중앙화된 기업이나 기관이 운영하지 않기 떄문에 자발적인 노드들의 참여에 의해서 네트워크를 통해 데이터가 relay 되는 방식이다. 따라서, 어떤 인터넷 검색 기록이나 사용 내역이 추적되지 않기 때문에 익명성이 보장된다. 그렇다면 onion routing 은 무엇일까? Onion routing 은 익명 통신을 위해 사용되는 기술로 1990년 대 미국 해군 연구소에서 개발되었다. Onion routing 은 현재는 Tor network 를 포함한 다양한 분야에서 응용되고 있다. Onion routing 의 원리는 데이터 패킷을 여러 층으로 암호화신다. Onion 이라는 말 또한 층층이 겹쳐져 있는 양파의 모양을 따서 이름이 지어졌다고 한다. 이렇게 암호화된 메시지는 최종 목적지에 도착하게 되면 암호화 층이 벗겨져서 수신자 입장에서는 복호화된 데이터를 받아볼 수 있다. 
+
+비트코인 트랜잭션 기록을 보면 종종 onion address 가 보인다. 이 onion address 가 붙어있는 트랜잭션은 onion routing 을 통해서 발생한 트랜잭션이라고 볼 수 있다. 이 트랜잭션은 어느 위치에서 시작되었는지 어떤 신원인지 알 수 있는 방법이 없다는 특징이 있다. Onion address 를 사용하기 위해서는 내 비트코인 지갑이 Tor network 을 지원해야 한다. BTC 를 전송했을 때, 이 트랜잭션은 Tor network 를 통해서 전파가 되고, 이렇게 전파된 트랜잭션은 송금자와 수신자를 추적하기 어렵다는 특징이 있다. 
+
 
 
 
