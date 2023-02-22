@@ -70,7 +70,9 @@ Pedersen commitment 는 confidential trasnaction 기술로 commiment 와 opening
 보안성이 강화되었다고 볼 수 있다. 
 
 
-[네컷글] onion address 는 무엇일까?
+[네컷글] onion address 는 무엇일까
+
+onion address 는 onion routing 을 사용하는 주소를 의미한다. 이를 이해하기 위해서는 Tor network 를 이해해야 한다. 사용자가 체감할 수 있는 Tor network 는 Tor 브라우저를 통해서 체감할 수 있는데 크롬이나 파이어폭스와 같은 특정 기업에서 이용하는 브라우저와  다르게 Tor 브라우저는 peer-to-peer network 로 운영되는 브라우저이다.
 
 
 
