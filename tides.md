@@ -1,3 +1,9 @@
+```
+https://d-central.tech/exploring-tides-a-new-era-in-bitcoin-mining-pool-rewards/
+https://github.com/OCEAN-xyz/datum_gateway
+https://ocean.xyz/docs/tides
+```
+
 T.I.D.E.S.
 투명한 구별된 확장된 공유 인덱스
 공정한 비트코인 채굴 풀 보상 시스템
